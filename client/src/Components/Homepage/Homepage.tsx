@@ -7,7 +7,10 @@ import React, { useState } from "react";
 import "./Homepage.css"; // Import your CSS file here
 import SignUp from "../SignUp/SignUp.tsx"; // Importing SignUp.js
 import Login from "../Login/Login.tsx"; //Importing Login.js
-import restroomSign from "./restroomsign.jpg";
+//import restroomSign from "./restroomsign.jpg";
+import { useTranslation } from 'react-i18next';
+import LanguageSelector from '../../Translations/language-selector';
+
 
 function Homepage() {
   const [showSignUp, setShowSignUp] = useState(false);
@@ -23,19 +26,21 @@ function Homepage() {
     setShowSignUp(false); //hide sign up if not being used
   };
 
+  const {t} = useTranslation();
+
   return (
     <div className="page">
       <div className="topnav">
         <a className="active" href="#home">
-          Home
+        {t("global.landing.home")}
         </a>
         <a href="#Login" onClick={toggleLogin}>
-          Log In
+        {t("global.landing.login")}
         </a>
         <a href="#SignUp" onClick={toggleSignUp}>
-          Sign Up
+        {t("global.landing.signup")}
         </a>
-        <div className="homepage-name">Restroom Finder</div>
+        <div className="homepage-name">{t("global.header.name")}</div>
       </div>
 
       {showSignUp && <SignUp onNavigateBack={() => setShowSignUp(false)} />}
@@ -44,10 +49,10 @@ function Homepage() {
         // Placeholder for homepage content
         <>
           <div className="Welcome-message">
-            <h1>Welcome to out Restroom Finding App!</h1>
-            <h1>Find your next restroom here.</h1>
+            <h1>{t("global.landing.title")}</h1>
+            <h1>{t("global.landing.description")}</h1>
             <img
-              src={restroomSign}
+              src="/assets/restroomsign.jpg"
               alt="Restroom Sign"
               className="restroom-image"
             />
