@@ -1,7 +1,12 @@
 {
     "landing": {
         "title": "مرحبًا بك في تطبيق البحث عن الحمام!",
-        "description": "ابحث عن مرحاضك التالي هنا."
+        "description": "ابحث عن مرحاضك التالي هنا.",
+        "home": "الصفحة الرئيسية",
+        "login": "تسجيل الدخول",
+        "signup": "اشتراك",
+        "searchbar": "عنوان البحث",
+        "addrestroom": "إضافة مرحاض"
     },
     "header": {
         "name": "مكتشف مرحاض"
@@ -11,7 +16,9 @@
         "reviews": "مراجعات",
         "addPost": "يضيف",
         "search": "يبحث",
-        "searchbar": "موقع..."
+        "searchbar": "موقع...",
+        "within": "أميال",
+        "distancemetric": "في حدود"
     },
     "dropdown" : {
         "profile": "حساب تعريفي",
@@ -19,6 +26,27 @@
         "language" : "لغة",
         "signout" : "خروج",
         "return" : "يعود"
+    },
+    "addrestroom": {
+        "title": "إرسال مرحاض",
+        "backbtn": "العودة إلى لوحة القيادة",
+        "name": "اسم:",
+        "street": "شارع:",
+        "city": "مدينة:",
+        "state": "ولاية:",
+        "country": "دولة:",
+        "accessible": "يمكن الوصول:",
+        "unisex": "للجنسين:",
+        "submitbtn": "حفظ مرحاض",
+        "changetable": "تغيير الجدول:",
+        "directions": "الاتجاهات:",
+        "comment": "تعليق:",
+        "cancel": "يلغي",
+        "option": "حدد الخيار",
+        "yes": "نعم",
+        "no": "لا",
+        "dirdesc": "الطابق الثاني في الخلف...، الخ.",
+        "commdesc": "يجب أن تكون عميلاً يدفع...، إلخ."
     },
     "reviews": {
         "title": "مراجعة الحمام"

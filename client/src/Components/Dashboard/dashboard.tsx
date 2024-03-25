@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import LanguageSelector from '../../Translations/language-selector';
 
 import { db } from "../../firebase.ts";
-import {collection, getDocs, } from 'firebase/firestore'
+import {collection, getDocs, } from 'firebase/firestore';
 
 //store all essential info for nearby locations
 let nearbyLocations=[] as {id : string, name: string, address: string, distance: number, latS: number, lngS: number, rating:{positive: number, negative: number} }[];
@@ -575,7 +575,7 @@ function SearchLocation(){
                 </div>
                 <div className="locationSettings">
                   <button className="setDistance"  onClick={handleDistanceDropdown}>
-                        <span>Within {distance} miles </span>
+                        <span>{t("global.dashboard.within")} </span><span>{distance}</span><span> {t("global.dashboard.distancemetric")} </span>
                       <img
                           src="https://static.thenounproject.com/png/551749-200.png"
                           className="open-dropdown"
@@ -583,12 +583,12 @@ function SearchLocation(){
                         />
                   </button>
                     <div className={`dropdown-contentB ${dropdownOpenB ? 'flex' : 'hidden'}`}>
-                      <span onClick={()=>handleDistanceChange(0.5)}>Within 0.5 miles</span>
-                      <span onClick={()=>handleDistanceChange(1.0)}>Within 1.0 miles</span>
-                      <span onClick={()=>handleDistanceChange(2.0)}>Within 2.0 miles</span>
-                      <span onClick={()=>handleDistanceChange(5.0)}>Within 5.0 miles</span>
-                      <span onClick={()=>handleDistanceChange(10.0)}>Within 10.0 miles</span>
-                      <span onClick={()=>handleDistanceChange(15.0)}>Within 15.0 miles</span>
+                      <span onClick={()=>handleDistanceChange(0.5)}>{t("global.dashboard.within")} 0.5 {t("global.dashboard.distancemetric")}</span>
+                      <span onClick={()=>handleDistanceChange(1.0)}>{t("global.dashboard.within")} 1.0 {t("global.dashboard.distancemetric")}</span>
+                      <span onClick={()=>handleDistanceChange(2.0)}>{t("global.dashboard.within")} 2.0 {t("global.dashboard.distancemetric")}</span>
+                      <span onClick={()=>handleDistanceChange(5.0)}>{t("global.dashboard.within")} 5.0 {t("global.dashboard.distancemetric")}</span>
+                      <span onClick={()=>handleDistanceChange(10.0)}>{t("global.dashboard.within")} 10.0 {t("global.dashboard.distancemetric")}</span>
+                      <span onClick={()=>handleDistanceChange(15.0)}>{t("global.dashboard.within")} 15.0 {t("global.dashboard.distancemetric")}</span>
                     </div>
 
                 </div>
@@ -706,7 +706,7 @@ function UserProfile(){
           <div className={`dropdown-content ${dropdownOpen ? 'show' : ''}`}>
             <a href="https://www.google.com/">{t("global.dropdown.profile")}</a>
             <a>{t("global.dropdown.settings")}</a>
-            <button ref={settingsRef} type="button">
+            <button className="language-btn" ref={settingsRef} type="button">
             {t("global.dropdown.language")}       
             </button >
             <Link to="/">{t("global.dropdown.signout")}</Link>

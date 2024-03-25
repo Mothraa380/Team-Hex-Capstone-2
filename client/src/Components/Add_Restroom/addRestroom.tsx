@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import './addRestroom.css';
 
 function AddRestroom() {
@@ -31,41 +32,43 @@ function AddRestroom() {
     // Add logic to handle form submission like sending data to a server or updating state
   };
 
+  const {t} = useTranslation();
+
   return (
     <div className="add-restroom-container">
     <form onSubmit={handleSubmit} className="add-restroom-form">
-      <h2>Submit a Restroom</h2>
-      <label>Name:<input type="text" name="name" value={formState.name} onChange={handleChange} required /></label>
-      <label>Street:<input type="text" name="street" value={formState.street} onChange={handleChange} required /></label>
-      <label>City:<input type="text" name="city" value={formState.city} onChange={handleChange} required /></label>
-      <label>State:<input type="text" name="state" value={formState.state} onChange={handleChange} required /></label>
-      <label>Country:<input type="text" name="country" value={formState.country} onChange={handleChange} required /></label>
-      <label>Accessible:<select name="accessible" value={formState.accessible} onChange={handleChange} required>
-          <option value="">Select Option</option>
-          <option value="Yes">Yes</option>
-          <option value="No">No</option>
+      <h2>{t("global.addrestroom.title")}</h2>
+      <label>{t("global.addrestroom.name")}<input type="text" name="name" value={formState.name} onChange={handleChange} required /></label>
+      <label>{t("global.addrestroom.street")}<input type="text" name="street" value={formState.street} onChange={handleChange} required /></label>
+      <label>{t("global.addrestroom.city")}<input type="text" name="city" value={formState.city} onChange={handleChange} required /></label>
+      <label>{t("global.addrestroom.state")}<input type="text" name="state" value={formState.state} onChange={handleChange} required /></label>
+      <label>{t("global.addrestroom.country")}<input type="text" name="country" value={formState.country} onChange={handleChange} required /></label>
+      <label>{t("global.addrestroom.accessible")}<select name="accessible" value={formState.accessible} onChange={handleChange} required>
+      <option value="">{t("global.addrestroom.option")}</option>
+          <option value="Yes">{t("global.addrestroom.yes")}</option>
+          <option value="No">{t("global.addrestroom.no")}</option>
       </select></label>
-      <label>Unisex:<select name="unisex" value={formState.unisex} onChange={handleChange} required>
-          <option value="">Select Option</option>
-          <option value="Yes">Yes</option>
-          <option value="No">No</option>
+      <label>{t("global.addrestroom.unisex")}<select name="unisex" value={formState.unisex} onChange={handleChange} required>
+      <option value="">{t("global.addrestroom.option")}</option>
+          <option value="Yes">{t("global.addrestroom.yes")}</option>
+          <option value="No">{t("global.addrestroom.no")}</option>
       </select></label>
-      <label>Changing Table:<select name="changingTable" value={formState.changingTable} onChange={handleChange} required>
-          <option value="">Select Option</option>
-          <option value="Yes">Yes</option>
-          <option value="No">No</option>
+      <label>{t("global.addrestroom.changetable")}<select name="changingTable" value={formState.changingTable} onChange={handleChange} required>
+          <option value="">{t("global.addrestroom.option")}</option>
+          <option value="Yes">{t("global.addrestroom.yes")}</option>
+          <option value="No">{t("global.addrestroom.no")}</option>
       </select></label>
       <label>
-      Directions:
-      <textarea name="directions" placeholder="Second floor in the back..., etc." onChange={handleChange}></textarea>
+      {t("global.addrestroom.directions")}
+      <textarea name="directions" placeholder={t("global.addrestroom.dirdesc")} onChange={handleChange}></textarea>
       </label>
       <label>
-      Comment:
-      <textarea name="comments" placeholder="Have to be a paying customer..., etc." onChange={handleChange}></textarea>
+      {t("global.addrestroom.comment")}
+      <textarea name="comments" placeholder={t("global.addrestroom.commdesc")} onChange={handleChange}></textarea>
       </label>
         <div className="form-actions">
-          <button type="submit" onClick={() => navigate('/dashboard')}>Save Restroom</button>
-          <button type="button" onClick={() => navigate('/')}>Cancel</button>
+          <button type="submit" onClick={() => navigate('/dashboard')}>{t("global.addrestroom.submitbtn")}</button>
+          <button type="button" onClick={() => navigate('/')}>{t("global.addrestroom.cancel")}</button>
         </div>
       </form>
     </div>

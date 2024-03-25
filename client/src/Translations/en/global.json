@@ -1,7 +1,12 @@
 {
     "landing": {
-        "title": "Welcome to out Restroom Finding App!",
-        "description": "Find your next restroom here."
+        "title": "Welcome to our Restroom Finding App!",
+        "description": "Find your next restroom here.",
+        "home": "Home",
+        "login": "Log In",
+        "signup": "Sign Up",
+        "searchbar": "Search address",
+        "addrestroom": "Add Restroom"
     },
     "header": {
         "name": "Restroom Finder"
@@ -11,7 +16,9 @@
         "reviews": "Reviews",
         "addPost": "Add",
         "search": "Search",
-        "searchbar": "Location..."
+        "searchbar": "Location...",
+        "within": "Within",
+        "distancemetric": "miles"
     },
     "dropdown" : {
         "profile": "Profile",
@@ -19,6 +26,27 @@
         "language" : "Language",
         "signout" : "Sign Out",
         "return" : "Return"
+    },
+    "addrestroom": {
+        "title": "Submit a Restroom",
+        "backbtn": "Back to Dashboard",
+        "name": "Name:",
+        "street": "Street:",
+        "city": "City:",
+        "state": "State:",
+        "country": "Country:",
+        "accessible": "Accessible:",
+        "unisex": "Unisex:",
+        "submitbtn": "Save Restroom",
+        "changetable": "Changing Table:",
+        "directions": "Directions:",
+        "comment": "Comment:",
+        "cancel": "Cancel",
+        "option": "Select Option",
+        "yes": "Yes",
+        "no": "No",
+        "dirdesc": "Second floor in the back..., etc.",
+        "commdesc": "Have to be a paying customer..., etc."
     },
     "reviews": {
         "title": "Restroom's Review"

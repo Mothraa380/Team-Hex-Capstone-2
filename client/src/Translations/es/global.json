@@ -1,7 +1,12 @@
 {
     "landing": {
         "title": "¡Bienvenidos a nuestra aplicación de búsqueda de baños!",
-        "description": "Encuentra tu próximo baño aquí."
+        "description": "Encuentra tu próximo baño aquí.",
+        "home": "Página Principal",
+        "login": "Acceso",
+        "signup": "Inscribirse",
+        "searchbar": "Buscar dirección",
+        "addrestroom": "Agregar Baño"
     },
     "header": {
         "name": "Buscador de Baños"
@@ -11,7 +16,9 @@
         "reviews": "Opiniones",
         "addPost": "Agregar",
         "search": "Buscar",
-        "searchbar": "Ubicación..."
+        "searchbar": "Ubicación...",
+        "within": "Dentro de",
+        "distancemetric": "millas"
     },
     "dropdown" : {
         "profile": "Perfil",
@@ -19,6 +26,27 @@
         "language" : "Idioma",
         "signout" : "Desconectar",
         "return" : "Regresar"
+    },
+    "addrestroom": {
+        "title": "Enviar un Baño",
+        "backbtn": "Back to Dashboard",
+        "name": "Nombre:",
+        "street": "Calle:",
+        "city": "Ciudad:",
+        "state": "Estado:",
+        "country": "País:",
+        "accessible": "Accesible:",
+        "unisex": "Unisexo:",
+        "submitbtn": "Guardar Baño",
+        "changetable": "Mesa de Cambiar Pañales:",
+        "directions": "Direcciones:",
+        "comment": "Commentarios:",
+        "cancel": "Cancelar",
+        "option": "Seleccionar Opción",
+        "yes": "Si",
+        "no": "No",
+        "dirdesc": "Segundo piso atrás..., etc.",
+        "commdesc": "Tiene que ser un cliente de pago..., etc."
     },
     "reviews": {
         "title": "Revisión del Baño"
