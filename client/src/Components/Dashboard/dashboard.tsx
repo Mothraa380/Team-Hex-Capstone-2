@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useRef, useCallback, ReactHTMLElement } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Loader } from '@googlemaps/js-api-loader';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import "./dashboard.css"; 
@@ -81,7 +81,7 @@ function SearchLocation(){
     nearbyLocations = [];
   
     //remove all markers from map
-    if(locationMarkers.length !=0)
+    if(locationMarkers.length !== 0)
     {
       locationMarkers.forEach(marker => {
         console.log('delete');
