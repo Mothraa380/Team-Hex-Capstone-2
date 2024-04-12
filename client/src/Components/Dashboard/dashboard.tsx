@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Loader } from '@googlemaps/js-api-loader';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import "./dashboard.css"; 
@@ -30,294 +29,354 @@ function SearchLocation(){
   const [distance, setDistance] = useState(globalDistance); //within radius of global distance
   const [circle, setCircle] = useState<google.maps.Circle | null>(null);
   const currentLocation = useLocation();
-  const memoizedFindTheWay = useCallback(async (circle, map, userPosition, sortByRatings) => {
-    try {
-      // Your asynchronous logic goes here
-      // For example:
-      const result = await findTheWay(circle, map, userPosition, sortByRatings);
-      // Process the result if needed
-      return result;
-    } catch (error) {
-      // Handle errors
-      console.error('Error:', error);
-    } finally {
-      // Finally block executes whether there's an error or not
-      // You can perform cleanup or other actions here
-      console.log('Finally block executed');
-    }
-  }, []);
-
   const [sortByRatings, setSortByRatings] = useState(false);
   const [showMap, setShowMap] = useState(false);
-
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [wideDisplay, setWideDisplay] = useState(false);
+  const [sidebarUpdate, setSidebarUpdate] = useState(false);
+  const modifyDisplay = !showMap ? '' : 'modified';
 
-    useEffect(() => {
-        const handleResize = () => {
-            setWindowWidth(window.innerWidth);
-        };
+  //to change display based on users device width
+  useEffect(() =>
+  {
+    if(windowWidth > 900)
+    {
+      if(!wideDisplay){
+        setWideDisplay(true);
+        //console.log(wideDisplay, "mommy");
+      }
+    }
+    else
+    {
+      if(wideDisplay)
+      {
+        setWideDisplay(false);
+        //console.log(wideDisplay, "daddy");
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [windowWidth]);
 
-        window.addEventListener('resize', handleResize);
+  useEffect(() => {
+      const handleResize = () => {
+          setWindowWidth(window.innerWidth);
+      };
 
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    }, []);
+      window.addEventListener('resize', handleResize);
 
-  let routeIndex: number | null = null;
+      return () => {
+          window.removeEventListener('resize', handleResize);
+      };
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
+  let routeIndex: number | null = null; //to tie user selected marker and sidebar locations
+
+  //navigate to review page and pass id and lat and lng from user entered position
   const navigateToReviewPage = (index : number) =>{
     routeIndex = index;
-    const positionString = `${userPosition.lat},${userPosition.lng}`;
-    console.log("HORSEEEEE", routeIndex);
-    if(routeIndex || routeIndex === 0)
-      navigate(`/reviewpage/${nearbyLocations[routeIndex].id}/${positionString}`);
+    const positionString = `${userPosition.lat},${userPosition.lng}`; //user entered lat and lng
+    //console.log("HORSEEEEE", routeIndex);
+    if(routeIndex || routeIndex === 0)  //if routeindex is not null or is 0
+      navigate(`/reviewpage/${nearbyLocations[routeIndex].id}/${positionString}`);  //navigate to reviewpage
     else
-      console.log("PROBLEM", routeIndex);
+      {//console.log("PROBLEM", routeIndex);
+      }
   }
 
   //find locations within certain radius and create markers, store data, signal for sidebar to rerender
-  const findTheWay = async (circle, map, userPosition, sortByRatings) => {
-    nearbyLocations = [];
-  
+  const findTheWay = async (distance, map, userPosition, sortByRatings) => {
+    nearbyLocations = []; //reset nearby locations to empty
+
     //remove all markers from map
     if(locationMarkers.length !== 0)
     {
       locationMarkers.forEach(marker => {
-        console.log('delete');
-        marker.setMap(null);
+      //console.log('delete');
+      (marker as google.maps.Marker).setMap(null);
     });
     //Empty the locationMarkers array
       locationMarkers = [];
     }
 
-      try {
-        // Perform geocoding to convert address to coordinates using a geocoding service
-        const restroomSnap = await getDocs(collection(db, "restrooms"));
-        await Promise.all(restroomSnap.docs.map(async (doc) => {
-          const data = doc.data();
-          const street = data.street;
-          const city = data.city;
-          const state = data.state;
-          const country = data.country;
-          const name = data.name;
-          const positive = data.thumbs_up as number;
-          const negative =  data.thumbs_down as number;
-          const total = positive + negative;
+    try {
+      // Perform geocoding to convert address to coordinates using a geocoding service
+      const restroomSnap = await getDocs(collection(db, "restrooms"));
+      await Promise.all(restroomSnap.docs.map(async (doc) => {
+        const data = doc.data();
+        const street = data.street;
+        const city = data.city;
+        const state = data.state;
+        const country = data.country;
+        const name = data.name;
+        const positive = data.thumbs_up as number;
+        const negative =  data.thumbs_down as number;
+        const total = positive + negative;
 
-          let color = "";
-          let overallRating = positive / total * 100;
-          
+        let color = ""; //color based on rating
+        let overallRating = positive / total * 100; //calc rating
+        
 
-          if(total === 0)
-          {
-            overallRating = 0;
-            color = "rgb(40, 40, 135)";
-          }
-          else if(overallRating  < 70 && overallRating >= 40)
-          {
-            color = "orange";
-          }
+        if(total === 0) //if no ratings
+        {
+          overallRating = 0;
+          color = "rgb(40, 40, 135)"; //default color
+        }
+        else if(overallRating  < 70 && overallRating >= 40) //if ratings between 40% and 69%
+        {
+          color = "rgb(249, 127, 14)";  //color is orange - ok
+        }
+        else if(overallRating < 40) //if ratings less than 40%
+        {
+          color = "red";  //bad
+        }
+        else
+        {
+          color = "green";  //good
+        }
+        overallRating /= 20;  //convert ratings to out of 5 stars
 
-          else if(overallRating < 40)
-          {
-            color = "red";
-          }
-
-          else
-          {
-            color = "green";
-          }
-          overallRating /= 20;
-
-          //console.log('MAMA MIA',typeof rating.positive);
-    
-          // Concatenate street, city, state, and country to form complete address
-          const address = `${street}, ${city}, ${state}, ${country}`;
-    
-          console.log("Attempting geocoding for address:", address);
-    
-          // Perform geocoding to convert address to coordinates
-          const response = await fetch(
-            `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=AIzaSyDLRmzWGSVuOYRHHFJ0vrEApxLuSVVgf1o`
-          );
-    
-          if (response.ok) {
-            const geoData = await response.json();
-            console.log("Geocoding response:", geoData); // Log the response from geocoding API
-            if (geoData.results && geoData.results[0] && geoData.results[0].geometry) {
-              const { lat, lng } = geoData.results[0].geometry.location;
-    
-              // Calculate distance between the location and user's position
-              const distance = google.maps.geometry.spherical.computeDistanceBetween(
-                new google.maps.LatLng(lat, lng),
-                new google.maps.LatLng(userPosition.lat, userPosition.lng)
-              );
-    
-              // Check if the location is within the selected radius
-              if (distance <= circle.getRadius()) {
-
-                // Push the location to the nearbyLocations array
-                const distanceInMiles = parseFloat((distance / 1609.34).toFixed(2));
-                nearbyLocations.push({ id: doc.id, name, address, distance: distanceInMiles, latS: lat, lngS: lng, rating: overallRating, color});
-              }
-            } else {
-              console.error("Invalid location:", address); //print error
+        ////console.log('MAMA MIA',typeof rating.positive);
+  
+        // Concatenate street, city, state, and country to form complete address
+        const address = `${street}, ${city}, ${state}, ${country}`;
+  
+        //console.log("Attempting geocoding for address:", address);
+  
+        // Perform geocoding to convert address to coordinates
+        const response = await fetch(
+          `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=AIzaSyDLRmzWGSVuOYRHHFJ0vrEApxLuSVVgf1o`
+        );
+  
+        if (response.ok) {
+          const geoData = await response.json();
+          //console.log("Geocoding response:", geoData); // Log the response from geocoding API
+          if (geoData.results && geoData.results[0] && geoData.results[0].geometry) {
+            const { lat, lng } = geoData.results[0].geometry.location;
+  
+            // Calculate distance between the location and user's position
+            const distanceBetween = google.maps.geometry.spherical.computeDistanceBetween(
+              new google.maps.LatLng(lat, lng),
+              new google.maps.LatLng(userPosition.lat, userPosition.lng)
+            );
+  
+            // Check if the location is within the selected radius
+            if (distanceBetween <= (distance * 1609.34) ) {
+              //round distance to 2 decimal places
+              const distanceInMiles = parseFloat((distanceBetween / 1609.34).toFixed(2));
+              //push to nearby lcoations
+              nearbyLocations.push({ id: doc.id, name, address, distance: distanceInMiles, latS: lat, lngS: lng, rating: overallRating, color});
             }
           } else {
-            console.error("Geocoding request failed");//print error
+            //console.error("Invalid location:", address); //print error
           }
-        }));
-    
-        console.log("SPEAK YOUR TRUTH ",sortByRatings);
-        // Sort nearby locations by distance or rating
-        if(sortByRatings)
-          nearbyLocations.sort((a, b) => b.rating - a.rating);
-        else
-          nearbyLocations.sort((a, b) => a.distance - b.distance);
-        //create markers relative to nearby locations as well as info boxes to associate with them when hovering
-        nearbyLocations.forEach( (location, index) => {
-          const marker = new google.maps.Marker({
-                  position: { lat:location.latS, lng: location.lngS },
-                  map,
-                  title: location.name,
-                  icon: {
-                    url: "/assets/marker.PNG",
-                    scaledSize: new google.maps.Size(30, 45)
-                  }
-                })as MarkerWithInfoWindow;
-                //info to display when marker selected
+        } else {
+          //console.error("Geocoding request failed");//print error
+        }
+      }));
+  
+      //console.log("SPEAK YOUR TRUTH ",sortByRatings);
 
-                let infoWindow;
-                if(location.rating === 0)
-                {
-                  infoWindow = new google.maps.InfoWindow({
-                    content: `
-                      <div>${location.address}</div>
-                      <div style="margin-bottom: 4px;">Distance: ${location.distance} mi / ${(location.distance * 1.60934).toFixed(3)} km</div>
-                      <div style="border-radius: 3px; margin-bottom: 4px; text-align: center; color: white; padding: 4px; background: ${location.color}">No ratings</div>
-                      <button class="navigate-button" id="navigateButton-${index}" style="border-radius: 3px; margin-bottom: 4px;">View more information</button>`,
-                });
+      // Sort nearby locations by distance or rating
+      if(sortByRatings)
+        nearbyLocations.sort((a, b) => b.rating - a.rating);
+      else
+        nearbyLocations.sort((a, b) => a.distance - b.distance);
+
+      //create markers relative to nearby locations as well as info boxes to associate with them when hovering
+      nearbyLocations.forEach( (location, index) => {
+        const marker = new google.maps.Marker({
+                position: { lat:location.latS, lng: location.lngS },
+                map,
+                title: location.name,
+                icon: {
+                  url: "/assets/marker.PNG",
+                  scaledSize: new google.maps.Size(30, 45)
                 }
-                else
-                {
-                  infoWindow = new google.maps.InfoWindow({
-                    content: `
-                      <div>${location.address}</div>
-                      <div style="margin-bottom: 4px;">Distance: ${location.distance} mi / ${(location.distance* 1.60934).toFixed(3)} km</div>
-                      <div style="border-radius: 3px; margin-bottom: 4px; text-align: center; color: white; padding: 4px; background: ${location.color}">${(location.rating).toFixed(1)} / 5.0 ★</div>
-                      <button class="navigate-button" id="navigateButton-${index}" style="border-radius: 3px; margin-bottom: 4px;">View more information</button>`
+              })as MarkerWithInfoWindow;
+              //info to display when marker selected
+
+              let infoWindow;
+              if(location.rating === 0)  //if no ratings
+              {
+                infoWindow = new google.maps.InfoWindow({
+                  content: `
+                    <div>${location.address}</div>
+                    <div style="margin-bottom: 4px;">Distance: ${location.distance} mi / ${(location.distance * 1.60934).toFixed(3)} km</div>
+                    <div style="border-radius: 3px; margin-bottom: 4px; text-align: center; color: white; padding: 4px; background: ${location.color}">No ratings</div>
+                    <button class="navigate-button" id="navigateButton-${index}" style="border-radius: 3px; margin-bottom: 4px;">View more information</button>`,
+              });
+              }
+              else  //if there are ratings
+              {
+                infoWindow = new google.maps.InfoWindow({
+                  content: `
+                    <div>${location.address}</div>
+                    <div style="margin-bottom: 4px;">Distance: ${location.distance} mi / ${(location.distance* 1.60934).toFixed(3)} km</div>
+                    <div style="background: ${location.color}; border-radius: 3px; margin-bottom: 4px; text-align: center; color: white; padding: 4px;">${(location.rating).toFixed(1)} / 5.0 ★</div>
+                    <button class="navigate-button" id="navigateButton-${index}" style="border-radius: 3px; margin-bottom: 4px;">View more information</button>`
+                });
+              }
+
+              //button to navigate to review page
+              google.maps.event.addListener(infoWindow, 'domready', () => {
+                const navigateButton = document.getElementById(`navigateButton-${index}`);
+                if (navigateButton) {
+                  navigateButton.addEventListener('click', () => {
+                    navigateToReviewPage(index); // Call your function here
                   });
                 }
+              });
 
-                google.maps.event.addListener(infoWindow, 'domready', () => {
-                  const navigateButton = document.getElementById(`navigateButton-${index}`);
-                  if (navigateButton) {
-                    navigateButton.addEventListener('click', () => {
-                      navigateToReviewPage(index); // Call your function here
-                    });
-                  }
-                });
+              //open info window when user clicks
+              google.maps.event.addListener(marker, 'click', () => {
+                infoWindow.open(map, marker);
+            });  
+              locationMarkers.push(marker);
+    });
+    setDataLoaded(true);  //to initiate sidebar update
 
-                marker.addListener('click', () => {
-                      infoWindow.open(map, marker);
-                    });      
-                locationMarkers.push(marker);
-      });
-        setDataLoaded(true);  //to initiate sidebar update
-        if(dataLoaded){
-          console.log('yooo whats good');
-        }
-        
-        // Log the number of locations found
-        console.log("Number of nearby restroom locations:", nearbyLocations.length);
+    if(dataLoaded){
+      //console.log('yooo whats good');
+    }
     
-      } catch (error) {
-        console.error("Error fetching restroom data:", error);  //print error
-      }
-    };
+    // Log the number of locations found
+    //console.log("Number of nearby restroom locations:", nearbyLocations.length);
+  
+    } catch (error) {
+      //console.error("Error fetching restroom data:", error);  //print error
+    }
+  };
 
-
-  //load google map api and operate location search functions
-  useEffect(() => {
-
-    //if(!showMap && windowWidth <=1100) return;
-    console.log("WE MADE IT");
+  useEffect(() => { 
+    //console.log("WE MADE IT");
     //load map
-        const loader = new Loader({
-          apiKey: 'AIzaSyDLRmzWGSVuOYRHHFJ0vrEApxLuSVVgf1o',
-          version: 'weekly',
-          libraries: ['places', 'geometry'],
+    const loader = new Loader({
+      apiKey: 'AIzaSyDLRmzWGSVuOYRHHFJ0vrEApxLuSVVgf1o',
+      version: 'weekly',
+      libraries: ['places', 'geometry'],
+    });
+
+    loader.load().then(() => {
+      const mapElement = document.getElementById('map');
+      const inputElement = document.getElementById('locationInput') as HTMLInputElement;
+
+      const mapStyles = [
+        {
+          featureType: 'poi',
+          elementType: 'labels',
+          stylers: [
+            { visibility: 'on' } //hide all extra markers
+          ]
+        }
+      ];
+
+      if(!inputElement || !userPosition) return;
+      const searchBox = new window.google.maps.places.SearchBox(inputElement);  //suggest locations based on user input
+
+      searchBox.addListener('places_changed', selectionSearch);  //handle search for whichever location user selects
+
+      function selectionSearch() { //search based on user selection
+        const places = searchBox.getPlaces(); 
+
+        if (!places || places.length === 0) { //if places not loaded or no places shown
+          return;
+        }
+
+        const place = places[0];  //store place user selected
+        if (place.geometry && place.geometry.location) {  //check if location is valid
+          setOpen(true);  //allow circle radius to appear
+          setLocation(place.formatted_address ?? ''); //store the selected location in user input bar
+          //store lat and lng of selected place as users location
+          const { lat, lng } = place.geometry.location; 
+          setUserPosition({
+            lat: lat(),
+            lng: lng()
         });
-    
-        loader.load().then(() => {
-          const mapElement = document.getElementById('map');
-          const inputElement = document.getElementById('locationInput') as HTMLInputElement;
-    
-          const mapStyles = [
-            {
-              featureType: 'poi',
-              elementType: 'labels',
-              stylers: [
-                { visibility: 'off' } //hide all extra markers
-              ]
-            }
-          ];
-    
-          if (!mapElement || !inputElement || !userPosition) { //if map isnt loaded or input is empty
-            return;
-          }
-    
-          //setting map info
-          let mapInstance;
-          
-            mapInstance = new window.google.maps.Map(mapElement, { 
-              center: userPosition,
-              zoom: userPosition ? 17 : 1,
-              styles: mapStyles
-            });
-          
+          //zoom in to users new position
+          //globalLocation = location;
 
-          setMap(mapInstance);  //store map info 
-    
-          const searchBox = new window.google.maps.places.SearchBox(inputElement);  //suggest locations based on user input
-    
-          searchBox.addListener('places_changed', selectionSearch);  //handle search for whichever location user selects
-    
-          function selectionSearch() { //search based on user selection
-            const places = searchBox.getPlaces(); 
-    
-            if (!places || places.length === 0) { //if places not loaded or no places shown
-              return;
-            }
+          //console.log("savior sir", globalLocation, location);
+        }
+      }
 
-            const place = places[0];  //store place user selected
-            if (place.geometry && place.geometry.location) {  //check if location is valid
-              setOpen(true);  //allow circle radius to appear
-              setLocation(place.formatted_address ?? ''); //store the selected location in user input bar
-              //store lat and lng of selected place as users location
-              const { lat, lng } = place.geometry.location; 
-              const newPosition = { lat: lat(), lng: lng() };
-              setUserPosition(newPosition);
-             // holdPosition = {...newPosition};
-              mapInstance.panTo(newPosition); //zoom in to users new position
-              //globalLocation = location;
+      //console.log('hrmmmm', mapElement, inputElement, userPosition);
+      if (!mapElement) { //if map isnt loaded or input is empty
+        if(!wideDisplay)
+        {
+          setSidebarUpdate(!sidebarUpdate);
+          //console.log('we made it luv');
+        }  
+        return;
+      }
 
-              console.log("savior sir", globalLocation, location);
-            }
-          }
-        }).catch(error => { //if map failed to load
-          console.error('Error loading Google Maps API:', error);
+      if(wideDisplay)
+      {
+        setShowMap(false);
+      }
+      //console.log("LETS GET ITTTTTTT");
+
+      //setting map info
+      let mapInstance;
+      
+        mapInstance = new window.google.maps.Map(mapElement, { 
+          center: userPosition,
+          zoom: userPosition ? 17 : 1,
+          styles: mapStyles
         });
+      
 
-        console.log('AMMMEEERRRIIICAAAA');
-      }, [userPosition, distance, showMap, windowWidth]); //depends on if userPosition changes
+      setMap(mapInstance);  //store map info
+      
+
+      // const searchBox = new window.google.maps.places.SearchBox(inputElement);  //suggest locations based on user input
+
+      // searchBox.addListener('places_changed', selectionSearch);  //handle search for whichever location user selects
+
+      // function selectionSearch() { //search based on user selection
+        // const places = searchBox.getPlaces(); 
+
+        // if (!places || places.length === 0) { //if places not loaded or no places shown
+        //   return;
+        // }
+
+        // const place = places[0];  //store place user selected
+        // if (place.geometry && place.geometry.location) {  //check if location is valid
+        //   setOpen(true);  //allow circle radius to appear
+        //   setLocation(place.formatted_address ?? ''); //store the selected location in user input bar
+        //   //store lat and lng of selected place as users location
+        //   const { lat, lng } = place.geometry.location; 
+        //   setUserPosition({
+        //     lat: lat(),
+        //     lng: lng()
+        // });
+        // mapInstance.panTo({
+        //     lat: latitude,
+        //     lng: longitude
+        // }); //zoom in to users new position
+          //globalLocation = location;
+
+          //console.log("savior sir", globalLocation, location);
+        // }
+      // }
+    }).catch(error => { //if map failed to load
+      //console.error('Error loading Google Maps API:', error);
+    });
+
+    //console.log('AMMMEEERRRIIICAAAA');
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userPosition, distance, showMap, wideDisplay]); //depends on if userPosition changes
 
       
   //add markers to map and create circle radius
   useEffect(() => {
+    //console.log("LULU LALA");
+    if(!userPosition || !opened) return;
 
-    if (!map || !userPosition) return;  //if map failed to load or user position undefined
+    //console.log("LULU LALA");
+    findTheWay(distance, map, userPosition, sortByRatings); 
+
+    if (!map) return;  //if map failed to load or user position undefined
   
     //allow marker for user position after first valid address 
     if(opened){
@@ -351,53 +410,60 @@ function SearchLocation(){
 
     // Set the new circle instance
     setCircle(newCircle);
-
-      
-          
+       
     // Adjust the map bounds to include the marker and circle
     const bounds = new google.maps.LatLngBounds();
     bounds.extend(marker.getPosition()!);
     bounds.union(newCircle.getBounds()!);
     map.fitBounds(bounds); 
-
-    //add markers for locations within radius
-    if(newCircle !== undefined){
-      memoizedFindTheWay(newCircle, map, userPosition, sortByRatings);     
-    }
-
-        console.log('horset p2',locationMarkers.length);
+    //console.log('horset p2',locationMarkers.length);
     }
   
-  }, [map, sortByRatings]);  // map changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [map, sortByRatings, sidebarUpdate]);  // map changes
   
   useEffect(() => {
+    
     if(globalLocation && globalLocation.trim() !== '')
-      {setLocation(globalLocation);
-      handleSearch();
-    console.log(location, globalLocation );}
+      {
+        if(globalLocation === 'Your Location')
+        {
+          handleCurrentLocation();
+        }
+        else
+        {
+          setLocation(globalLocation);
+          handleSearch();
+        }
+        //console.log(location, globalLocation );
+      }
     else{
-      console.log("oh woe is me", globalLocation);
+      //console.log("oh woe is me", globalLocation);
 
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
 
   //to reset dataloaded to prepare for next sidebar update
   useEffect(() => {
     if (dataLoaded) {
-      console.log('Data loaded!');
+      //console.log('Data loaded!');
       setDataLoaded(false);
     }
-    console.log("curious george",location);
-    globalLocation = location;
+    //console.log("curious george",location);
+
+    if(location.trim() !== '')
+      globalLocation = location;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataLoaded]);
 
   //another handle search function using 'enter' and search button
   const handleSearch = async () => {
-    console.log(location.trim());
-    console.log(location);
+    //console.log(location.trim());
+    //console.log(location);
     if (location.trim() !== '' || globalLocation !== '') { //if location input isnt empty
-      console.log('HEYOOOO TEST');
+      //console.log('HEYOOOO TEST');
 
       //request geocode for location
       try {
@@ -422,16 +488,15 @@ function SearchLocation(){
             const { lat, lng } = data.results[0].geometry.location;
             setOpen(true);
             setUserPosition({ lat, lng });
-            //globalLocation = location;
-            console.log("User position updated successfully!");
+            //console.log("User position updated successfully!");
           } else {
-            console.log(data);
+            //console.log(data);
           }
         } else {  //if no response
-          console.error("Geocoding request failed");
+          //console.error("Geocoding request failed");
         }
       } catch (error) { //if error in connecting to googleapis
-        console.error("Error during geocoding:", error);
+        //console.error("Error during geocoding:", error);
       }
     }
   };
@@ -442,24 +507,22 @@ function SearchLocation(){
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           async (position) => {
-            const newPosition = {
+            setUserPosition({
               lat: position.coords.latitude,
               lng: position.coords.longitude
-            };
+          });
             setOpen(true);
-            setUserPosition(newPosition);
-            //globalLocation = location;
-            console.log("User position updated successfully:", newPosition);
+           // //console.log("User position updated successfully:", newPosition);
           },
           (error) => {
-            console.error('Error getting user location:', error);
+            //console.error('Error getting user location:', error);
           }
         );
       } else {
-        console.error('Geolocation is not supported by this browser.');
+        //console.error('Geolocation is not supported by this browser.');
       }
     } catch (error) {
-      console.error('Error getting user location:', error);
+      //console.error('Error getting user location:', error);
     }
   };
 
@@ -471,236 +534,144 @@ function SearchLocation(){
    // Removed extraneous closing brace and corrected dependency array
    }, [currentLocation.search]);
 
-   const initialAddressRef = useRef<string | null>(null);
+  const handleSortByRatingsChange = async () =>{
+    setSortByRatings(!sortByRatings);
+     //console.log("THE TRUUUTHHH",sortByRatings);
+  };
 
-   useEffect(() => {
-     // Parse the URL parameters
-     const searchParams = new URLSearchParams(window.location.search);
-     // Get the 'address' parameter from the URL
-     const addressParam = searchParams.get("address");
-     if(addressParam)
-     {
-      initialAddressRef.current = addressParam;
-      setLocation(addressParam);
-     }
-      
-     // Store the initial address value obtained from the URL in the ref
-     
-   }, []);
- 
-   useEffect(() => {
-     const initialAddress = initialAddressRef.current;
-     if (initialAddress) {
-       // This block of code will run after the initial address has been obtained
-       console.log(initialAddress);
-       // You can call any function here that needs to be executed after obtaining the initial address
-       handleSearch();
-       console.log("work?");
-     }
-   }, [initialAddressRef]);
-
-   const handleSortByRatingsChange = async () =>{
-     setSortByRatings(!sortByRatings);
-     console.log("THE TRUUUTHHH",sortByRatings);
-   };
-
-   const toggleMap = () => {
+  const toggleMap = () => {
     setShowMap(!showMap);
-    console.log(showMap);
+    //console.log(showMap);
+  };
+
+  const {t} = useTranslation();
+
+  function SavedSales({ update }) {
+    const [dropdownOpenB, setdropdownOpenB] = useState(false);
+    const {t} = useTranslation();
+    //console.log("DISTANCE.",globalDistance);
+    //console.log("radishes");
+  
+    //toggle radius distance dropdown
+    const handleDistanceDropdown = () => {
+      setdropdownOpenB(!dropdownOpenB); 
+      //console.log('wassuuuppp guurll');
     };
-      const {t} = useTranslation();
-      function SavedSales({ update }) {
-          const [dropdownOpenB, setdropdownOpenB] = useState(false);
-          const {t} = useTranslation();
-          const [savedDistance, setSavedDistance] = useState(globalDistance);
-          console.log("DISTANCE.",globalDistance);
-          console.log("radishes");
-        
-          //toggle radius distance dropdown
-          const handleDistanceDropdown = () => {
-            setdropdownOpenB(!dropdownOpenB); 
-            console.log('wassuuuppp guurll');
-          };
-          //update radius distance
-          const handleDistanceChange = (newDistance) =>{
-            setDistance(newDistance);
-            globalDistance = newDistance;
-            setSavedDistance(newDistance);
-          };
+    //update radius distance
+    const handleDistanceChange = (newDistance) =>{
+      setDistance(newDistance);
+      globalDistance = newDistance;
+    };
 
-          //highlight marker thats relative to list item hovered on sidebar
-          const highlightMarker = async (index: number) => {
-              if (locationMarkers[index]) {
-                await resetMarker();  //reset marker image and zindex
-                const newIcon = {
-                  url: "/assets/highlighted-marker.PNG",
-                        scaledSize: new google.maps.Size(30, 45)
-              };
-              locationMarkers[index].setIcon(newIcon);
-              console.log("yooooooo", index);
-              locationMarkers[index].setAnimation(google.maps.Animation.BOUNCE);
-              locationMarkers[index].setZIndex(google.maps.Marker.MAX_ZINDEX + 1);
-              console.log("arr length", locationMarkers.length);
-            }
-          };
-          
-          //resets all markers zindex and image
-          const resetMarker = () => {
-            return new Promise<void>((resolve) => {
-                const resetIcon = {
-                    url: "/assets/marker.PNG",
-                    scaledSize: new google.maps.Size(30, 45)
-                };
-                locationMarkers.forEach((marker, index) => {
-                  console.log(index);
-                    marker.setIcon(resetIcon);
-                    console.log('broooooo');
-                    marker.setAnimation(null);
-                    marker.setZIndex(index);
-                });
-                resolve(); // Resolve the Promise after resetting all markers
-            });
-};
-
-          const handleListItemClick = (index: number) => {
-            // Close any previously opened InfoWindows
-            //closeAllInfoWindows();
-            locationMarkers[index].setAnimation(null);
-            // Open InfoWindow for the clicked marker
-           // const marker = locationMarkers[index];
-           // const infoWindow = marker.infoWindow;
-           // infoWindow.open(map, marker);
+    //highlight marker thats relative to list item hovered on sidebar
+    const highlightMarker = async (index: number) => {
+      if (locationMarkers[index]) {
+        await resetMarker();  //reset marker image and zindex
+        const newIcon = {
+          url: "/assets/highlighted-marker.PNG",
+                scaledSize: new google.maps.Size(30, 45)
         };
 
-        
-        
-        const closeAllInfoWindows = () => {
-            locationMarkers.forEach(marker => {
-                marker.infoWindow.close();
-            });
+        (locationMarkers[index] as google.maps.Marker).setIcon(newIcon);
+        //console.log("yooooooo", index);
+        (locationMarkers[index] as google.maps.Marker).setAnimation(google.maps.Animation.BOUNCE);
+        (locationMarkers[index] as google.maps.Marker).setZIndex(google.maps.Marker.MAX_ZINDEX + 1);
+        //console.log("arr length", locationMarkers.length);
+      }
+    };
+    
+    //resets all markers zindex and image
+    const resetMarker = () => {
+      return new Promise<void>((resolve) => {
+        const resetIcon = {
+            url: "/assets/marker.PNG",
+            scaledSize: new google.maps.Size(30, 45)
         };
-          return (
-            <div >
-              <div className="saved">
-              <div className="sidebar-container">
-              <div className="sidebar">
-                  <div className="name">
-                  {t("global.dashboard.title")}
-                  <button className="viewMapButton" style={{ marginRight: '-150px'}} onClick={toggleMap}>View map</button>
-                    <button className="add-button"><Link to="/add-restroom" style={{ textDecoration: 'none', color: 'inherit'}}>{t("global.dashboard.addPost")}</Link></button>
-                  </div>
-                  <div className="locationSettings">
-                  <div className="checkboxAndDistance">
-        <input type="checkbox" id="sort-by-ratings" checked={sortByRatings} onChange={handleSortByRatingsChange} />
-        <label htmlFor="sort-by-ratings">Sort by ratings</label>
-        
-        <button className="setDistance" onClick={handleDistanceDropdown}>
-            <span>Within {distance} miles </span>
-            <img src="https://static.thenounproject.com/png/551749-200.png" className="open-dropdown" alt="" />
-        </button>
-    </div>
-                      <div className={`dropdown-contentB ${dropdownOpenB ? 'flex' : 'hidden'}`}>
-                        <span onClick={()=>handleDistanceChange(0.5)}>Within 0.5 miles</span>
-                        <span onClick={()=>handleDistanceChange(1.0)}>Within 1.0 miles</span>
-                        <span onClick={()=>handleDistanceChange(2.0)}>Within 2.0 miles</span>
-                        <span onClick={()=>handleDistanceChange(5.0)}>Within 5.0 miles</span>
-                        <span onClick={()=>handleDistanceChange(10.0)}>Within 10.0 miles</span>
-                        <span onClick={()=>handleDistanceChange(15.0)}>Within 15.0 miles</span>
-                      </div>
 
-                  </div>
-                  <div className="displayLocations">
-                  <ul>
-                    {nearbyLocations.map((location, index) => (
-                      <li key={`${location.address}-${index}`}
-                      onMouseEnter={() => highlightMarker(index)} 
-                      onClick={()=>handleListItemClick(index)}>
-                        <div className="locationInfo">
-                          <span className="name-text">{location.name}</span>
-                          <span className="location-text">{location.address}</span>
-                          <span> </span>
-                          <div style={{ display: 'flex', alignItems: 'center', paddingTop: '15px' }}>
-                            <span className="routeDistance">{location.distance} mi / {(location.distance * 1.60934).toFixed(3)} km</span>
-                            <span style={{ marginRight: '-40px', justifyContent: 'none', borderRadius: '3px', padding: '4px', color: 'white', background: `${location.color}`, fontSize: '15px' }}>
-                            
-                                {location.rating === 0 ? 
-                                    "N / A" :
-                                    `${(location.rating).toFixed(1)} / 5.0 ★`
-                                }
-                            </span>
-                        </div>
-                        </div>
-                        <button className="result-sales-button"
-                          onClick={()=> navigateToReviewPage(index)}>
-                        
-                          <img
-                            src="/assets/arrow.PNG"
-                            className="array-image"
-                            alt=""
-                          />
-                        
-                        </button>  
-                      </li>
-                    ))}
-                  </ul>
-                  </div>
+        locationMarkers.forEach((marker, index) => {
+          (marker as google.maps.Marker).setIcon(resetIcon);
+          (marker as google.maps.Marker).setAnimation(null);
+          (marker as google.maps.Marker).setZIndex(index);
+        });
+          resolve(); // Resolve the Promise after resetting all markers
+      });
+    };
+
+    const handleListItemClick = (index: number) => {
+      (locationMarkers[index] as google.maps.Marker).setAnimation(null);
+    };
+
+    return (
+      <div className="saved">
+        <div className="sidebar-container">
+          <div className={`sidebar ${modifyDisplay}`}>
+            <div className="sidebar-top">
+              <div className="name">
+              {t("global.dashboard.title")}
+                <div className="buttons">
+                  <button className="viewMapButton" style={{ marginRight: '0px'}} onClick={toggleMap}>
+                  {showMap ? 'Close map' : 'View map'}
+                </button>
+                <button className="add-button"><Link to="/add-restroom" style={{ textDecoration: 'none', color: 'inherit'}}>{t("global.dashboard.addPost")}</Link></button>
               </div>
               </div>
-              </div>
-              {/* <div className="show-results">
-              <div className="sidebar-container">
-              <div className="sidebar">
-                  <div className="locationSettings">
-                    <button className="setDistance"  onClick={handleDistanceDropdown}>
-                          <span>Within {distance} miles </span>
-                        <img
-                            src="https://static.thenounproject.com/png/551749-200.png"
-                            className="open-dropdown"
-                            alt=""
-                          />
-                    </button>
-                      <div className={`dropdown-contentB ${dropdownOpenB ? 'flex' : 'hidden'}`}>
-                        <span onClick={()=>handleDistanceChange(0.5)}>Within 0.5 miles</span>
-                        <span onClick={()=>handleDistanceChange(1.0)}>Within 1.0 miles</span>
-                        <span onClick={()=>handleDistanceChange(2.0)}>Within 2.0 miles</span>
-                        <span onClick={()=>handleDistanceChange(5.0)}>Within 5.0 miles</span>
-                        <span onClick={()=>handleDistanceChange(10.0)}>Within 10.0 miles</span>
-                        <span onClick={()=>handleDistanceChange(15.0)}>Within 15.0 miles</span>
-                      </div>
-                      <button className="add-button"><Link to="/add-restroom" style={{ textDecoration: 'none', color: 'inherit'}}>{t("global.dashboard.addPost")}</Link></button>
-                  </div>
-                  <div className="displayLocations">
-                  <ul>
-                    {nearbyLocations.map((location, index) => (
-                      <li key={`${location.address}-${index}`}
-                      onMouseEnter={() => highlightMarker(index)} 
-                      onClick={()=>handleListItemClick(index)}>
-                        <div className="locationInfo">
-                          <span className="name-text">{location.name}</span>
-                          <span className="location-text">{location.address}</span>
-                          <span className="routeDistance">{location.distance} mi / {(location.distance *  1.60934).toFixed(3)} km</span>
-                        </div>
-                        <button className="result-sales-button"
-                          onClick={()=> navigateToReviewPage(index)}>
-                        
-                          <img
-                            src="/assets/arrow.PNG"
-                            className="array-image"
-                            alt=""
-                          />
-                        
-                        </button>
-                      
-                      </li>
-                    ))}
-                  </ul>
-                  </div>
+              <div className="locationSettings">
+                <div className="checkboxAndDistance">
+                  <input type="checkbox" id="sort-by-ratings" checked={sortByRatings} onChange={handleSortByRatingsChange} />
+                  <label htmlFor="sort-by-ratings">Sort by ratings</label>
+                  <button className="setDistance" onClick={handleDistanceDropdown}>
+                      <span>Within {distance} miles </span>
+                      <img src="https://static.thenounproject.com/png/551749-200.png" className="open-dropdown" alt="" />
+                  </button>
                 </div>
+                <div className={`dropdown-contentB ${dropdownOpenB ? 'flex' : 'hidden'}`}>
+                  <span onClick={()=>handleDistanceChange(0.5)}>Within 0.5 miles</span>
+                  <span onClick={()=>handleDistanceChange(1.0)}>Within 1.0 miles</span>
+                  <span onClick={()=>handleDistanceChange(2.0)}>Within 2.0 miles</span>
+                  <span onClick={()=>handleDistanceChange(5.0)}>Within 5.0 miles</span>
+                  <span onClick={()=>handleDistanceChange(10.0)}>Within 10.0 miles</span>
+                  <span onClick={()=>handleDistanceChange(15.0)}>Within 15.0 miles</span>
                 </div>
-              </div> */}
               </div>
-          );
-        }
+            </div>
+
+            <div className={`displayLocations ${modifyDisplay}`}>
+              <ul>
+                {nearbyLocations.map((location, index) => (
+                <li key={`${location.address}-${index}`}
+                  onMouseEnter={() => highlightMarker(index)} 
+                  onClick={()=>handleListItemClick(index)}>
+                  <div className="locationInfo">
+                    <span className="name-text">{location.name}</span>
+                    <span className="location-text">{location.address}</span>
+                    <span> </span>
+                    <div style={{ display: 'flex', alignItems: 'center', paddingTop: '15px' }}>
+                      <span className="routeDistance">{location.distance} mi / {(location.distance * 1.60934).toFixed(3)} km</span>
+                      <span style={{ marginRight: '-55px', justifyContent: 'none', borderRadius: '3px', padding: '4px', color: 'white', background: `${location.color}`, fontSize: '15px' }}>                  
+                          {location.rating === 0 ? 
+                            " No  ratings " :
+                            `${(location.rating).toFixed(1)} / 5.0 ★`
+                          }
+                      </span>
+                    </div>
+                  </div>
+                  <button className="result-sales-button"
+                    onClick={()=> navigateToReviewPage(index)}>
+                    <img
+                      src="/assets/arrow.PNG"
+                      className="array-image"
+                      alt=""
+                    />
+                  </button>  
+                </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -718,17 +689,16 @@ function SearchLocation(){
                 aria-label="Search Location"
               />
               <button id="searchButton" type="button" className="searchButton" onClick={handleSearch}>
-              {t("global.dashboard.search")}
+                {t("global.dashboard.search")}
               </button>
               <img className="currentLocationButton" 
-                onClick={handleCurrentLocation}
+                onClick={()=>{setLocation('Your Location'); handleCurrentLocation();}}
                 src="/assets/currentLocation.png"
                 alt="current_location"
               />
             </div>
-            {/* <div className="map" id="map"></div> */}
             
-            {windowWidth > 1100 ? (
+            {wideDisplay ? (
                 <div className="map" id="map"></div>
             ) : (
                 showMap && <div className="map" id="map"></div>
@@ -747,9 +717,9 @@ function UserProfile(){
   };
 
   const [languagesOpen, setlanguagesOpen] = useState(false);
-  const handleLanguagesDropdown = () => {
-    setlanguagesOpen(!languagesOpen); // Toggle the dropdown
-  };
+  // const handleLanguagesDropdown = () => {
+  //   setlanguagesOpen(!languagesOpen); // Toggle the dropdown
+  // };
 
   let settingsRef = useRef();
   let profileRef = useRef();
@@ -781,22 +751,21 @@ function UserProfile(){
 
   return (
     <div className="profile" ref={profileRef}>
-            <button type="button"  onClick={handleProfileDropdown}>
+
             <img
-                src="https://i.pinimg.com/736x/b9/49/0a/b9490abd30c15850908b8ee0570f8b19.jpg"
+                src="/assets/settingsButton.png"
                 className="pfp"
-                alt="profile_picture"
+                alt="settings"
+                onClick={handleProfileDropdown}
               />
-            
-          </button>
+ 
+          {/* eslint-disable jsx-a11y/anchor-is-valid */}
           <div className={`dropdown-content ${dropdownOpen ? 'show' : ''}`}>
-            <a href="https://www.google.com/">{t("global.dropdown.profile")}</a>
-            <a>{t("global.dropdown.settings")}</a>
             <button ref={settingsRef} type="button">
             {t("global.dropdown.language")}       
             </button >
-            <Link to="/">{t("global.dropdown.signout")}</Link>
           </div>
+          {/* eslint-disable jsx-a11y/anchor-is-valid */}
           <div className={`dropdown-content ${languagesOpen ? 'show' : ''}`}>
             <LanguageSelector />
             <a ref={backRef}>{t("global.dropdown.return")}</a>
@@ -815,7 +784,7 @@ function Dashboard(){
   
   useEffect(() => {
     nearbyLocations = [];
-    console.log("jorge", globalLocation);
+    //console.log("jorge", globalLocation);
     
   }, []);
    const {t} = useTranslation();
