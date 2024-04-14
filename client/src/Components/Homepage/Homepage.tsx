@@ -71,41 +71,41 @@ function Homepage() {
   
 
   return (
-    <div className="page">
-      <LanguageSelector />
-      <div className="welcome-container">
-        <h1>{t("global.landing.title")}</h1>
-        <h1>{t("global.landing.description")}</h1>
-        <div className="search-bar-container">
-          <input
-            ref={searchInputRef}
-            type="text"
-            placeholder={t("global.landing.searchbar")}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyDown={handleEnterKey}
-            className="search-input"
-          />
-          <button onClick={handleSearch} className="search-button">
-            <FontAwesomeIcon icon={faSearch} />
-          </button>
-          <button onClick={handleSearchByLocation} className="location-button">
-            <FontAwesomeIcon icon={faCrosshairs} />
-          </button>
-        </div>
-        <button onClick={handleAddRestroom} className="add-restroom-button">
-          {t("global.landing.addrestroom")}
+  <div className="page">
+    <LanguageSelector />
+    <div className="welcome-container">
+      <h1>{t("global.landing.title")}</h1>
+      <h1>{t("global.landing.description")}</h1>
+      <div className="search-bar-container">
+        <input
+          ref={searchInputRef}
+          type="text"
+          placeholder={t("global.landing.searchbar")}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyDown={handleEnterKey}
+          className="search-input"
+        />
+        <button onClick={handleSearch} className="search-button">
+          <FontAwesomeIcon icon={faSearch} />
         </button>
-        <div className="image-container">
-          <img
-            src={restroomSign}
-            alt={t("global.restroomSignAlt")} // The key might need to be updated according to your JSON file
-            className="restroom-image"
-          />
-        </div>
+        <button onClick={handleSearchByLocation} className="location-button">
+          <FontAwesomeIcon icon={faCrosshairs} />
+        </button>
       </div>
-      <footer className="footer">Made with ❤️ by Team Hex</footer>
+      <button onClick={handleAddRestroom} className="add-restroom-button">
+        {t("global.landing.addrestroom")}
+      </button>
+      <div className="image-container">
+        <img
+          src="/assets/testing.png"  // Updated path to the new image
+          alt={t("global.restroomSignAlt")} // Make sure this text is appropriate for the new image
+          className="restroom-image"
+        />
+      </div>
     </div>
+    <footer className="footer">Made with ❤️ by Team Hex</footer>
+  </div>
   );
 }
 
