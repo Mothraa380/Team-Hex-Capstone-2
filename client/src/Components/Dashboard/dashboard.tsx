@@ -25,9 +25,6 @@ interface MarkerWithInfoWindow extends google.maps.Marker {
   infoWindow: google.maps.InfoWindow;
 }
 let locationMarkers: MarkerWithInfoWindow[] = []; // Variable to store location markers
-
-
-
 //deal with the search bar, map api, and search functions
 function SearchLocation(){
   const navigate = useNavigate();
@@ -400,16 +397,13 @@ function SearchLocation(){
     }
   }; */
 
-  const handleSearch = async (queryFromURL = '') => {
-    const query = queryFromURL || location.trim(); // Use URL query if available, otherwise use input from local state
+  const handleSearch = useCallback(async (queryFromURL = '') => {
+    const query = queryFromURL || location.trim();
     if (query !== '') {
-      // Proceed with existing logic to perform search
       try {
         const response = await fetch(
-          `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(location)}&key=AIzaSyDLRmzWGSVuOYRHHFJ0vrEApxLuSVVgf1o`
+          `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(query)}&key=AIzaSyDLRmzWGSVuOYRHHFJ0vrEApxLuSVVgf1o`
         );
-        
-        //if gets response, update user position with data recieved 
         if (response.ok) {
           const data = await response.json();
           if (data.results && data.results[0] && data.results[0].geometry) {
@@ -421,14 +415,14 @@ function SearchLocation(){
           } else {
             console.log(data);
           }
-        } else {  //if no response
+        } else {
           console.error("Geocoding request failed");
         }
-      } catch (error) { //if error in connecting to googleapis
+      } catch (error) {
         console.error("Error during geocoding:", error);
-      } 
+      }
     }
-  };
+  }, [location, setOpen, setUserPosition, setSearchUpdatedPosition]);
 
 
   //handle current location 
@@ -459,17 +453,18 @@ function SearchLocation(){
 
   useEffect(() => {
     const searchParams = new URLSearchParams(currentLocation.search); 
+    const address = searchParams.get('address');
+
     if (searchParams.get('useLocation') === 'true') {
       handleCurrentLocation();
     }
 
-    const address = searchParams.get('address');
     if (address) {
       handleSearch(address);
     }
 
   // Removed extraneous closing brace and corrected dependency array
-  }, [currentLocation.search]);
+  }, [currentLocation.search, handleSearch]);
   
   const handleEnterKey = (e) => {
           // if (e.key === 'Enter') {
