@@ -34,7 +34,7 @@ function Homepage() {
         <div className="search-bar-container">
           <input
             type="text"
-            placeholder={t("Location")}
+            placeholder={t("global.landing.searchbar")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="search-input"
@@ -47,7 +47,7 @@ function Homepage() {
           </button>
         </div>
         <button onClick={handleAddRestroom} className="add-restroom-button">
-          {t("Add Restroom")}
+          {t("global.landing.addrestroom")}
         </button>
         <div className="image-container">
           <img

@@ -49,14 +49,21 @@
         "commdesc": "Tiene que ser un cliente de pago..., etc."
     },
     "reviews": {
-        "title": "Revisión del Baño"
+        "title": "Información del baño",
+        "dashboard": "Panel",
+        "addreview": "Agregar una opinión",
+        "address": "Dirección:",
+        "directions":"Direcciones al edificio:",
+        "comments": "Commentarios:",
+        "reviewtitle": "Opiniones",
+        "noneavail": "No hay opiniones disponibles"
     },
     "addreviews" : {
         "addreview": "Agregar una Opinión",
         "name": "Nombre:",
-        "cleanliness": "Limpieza Sobre 10:",
-        "amenities": "Comodidades Sobre 10:",
-        "accessibility": "Accesibilidad Sobre 10:",
+        "cleanliness": "Limpieza:",
+        "amenities": "Comodidades:",
+        "accessibility": "Accesibilidad:",
         "description": "Descripción:",
         "add": "Agregar",
         "image": "Imagen:"

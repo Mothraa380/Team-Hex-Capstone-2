@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useParams } from "react-router-dom";
 import { db } from "../../firebase.ts";
 import { doc, getDoc, collection, query, where, getDocs, addDoc } from 'firebase/firestore';
+import { useTranslation } from 'react-i18next';
 import "./reviewpage.css";
 
 // Define a custom interface for restroom data
@@ -317,21 +318,23 @@ function ReviewPage() {
   };
 
   console.log("Reviews data:", );
+
+  const {t} = useTranslation();
   return (
     <div className="review-page">
       <div className="header-container">
         <button className="add-review-btn" onClick={() => setAddingReview(true)}>
-          Add Review
+        {t("global.reviews.addreview")}
         </button>
-        <div className="review-header">Restroom's information</div>
-        <button onClick={handleDashboardReturn} className="go-back-btn">Dashboard</button>
+        <div className="review-header">{t("global.reviews.title")}</div>
+        <button onClick={handleDashboardReturn} className="go-back-btn">{t("global.reviews.dashboard")}</button>
       </div>
       <div className="place-details">
         <div className="place-info-container">
           <div className="place-info">
           <div className="place-name">{restroomData?.name}</div>
-          <div className="place-address">Address: {restroomData?.address}</div>
-          <div className="place-directions">Building Directions: {restroomData?.direction}</div>
+          <div className="place-address">{t("global.reviews.address")} {restroomData?.address}</div>
+          <div className="place-directions">{t("global.reviews.directions")} {restroomData?.direction}</div>
           <div className="map" id="map"></div>
           <div className="route-steps-container">
             {/* <p>Street Directions</p>
@@ -346,22 +349,22 @@ function ReviewPage() {
       ))} */}
     </div>
           </div>
-      <div className="place-comments">Comments: {restroomData?.comments}</div>
+      <div className="place-comments">{t("global.reviews.comments")} {restroomData?.comments}</div>
       <div className="image-container">
       <img src="Comp/Reviewpage/Handicap_toliet_2.jpg" alt="Place Image" /> 
       </div>
       </div>
       </div>
-      <div className="review-bar">Review</div>
+      <div className="review-bar">{t("global.reviews.reviewtitle")}</div>
       {addingReview && (
         <div className="add-review-dropdown">
-          <label>Name:</label>
+          <label>{t("global.addreviews.name")}</label>
           <input
             type="text"
             value={newReview.reviewerName}
             onChange={(e) => setNewReview({ ...newReview, reviewerName: e.target.value })}
           />
-          <label>Cleanliness:</label>
+          <label>{t("global.addreviews.cleanliness")}</label>
           <input
             type="range"
             min={0}
@@ -369,7 +372,7 @@ function ReviewPage() {
             value={newReview.cleanliness}
             onChange={(e) => setNewReview({ ...newReview, cleanliness: parseFloat(e.target.value) })}
           />
-          <label>Amenities:</label>
+          <label>{t("global.addreviews.amenities")}</label>
           <input
             type="range"
             min={0}
@@ -377,7 +380,7 @@ function ReviewPage() {
             value={newReview.amenities}
             onChange={(e) => setNewReview({ ...newReview, amenities: parseFloat(e.target.value) })}
           />
-          <label>Accessibility:</label>
+          <label>{t("global.addreviews.accessibility")}</label>
           <input
             type="range"
             min={0}
@@ -385,19 +388,19 @@ function ReviewPage() {
             value={newReview.accessibility}
             onChange={(e) => setNewReview({ ...newReview, accessibility: parseFloat(e.target.value) })}
           />
-          <label>Description:</label>
+          <label>{t("global.addreviews.description")}</label>
           <input
             type="text"
             value={newReview.description}
             onChange={(e) => setNewReview({ ...newReview, description: e.target.value })}
           />
-          <label>Image:</label>
+          <label>{t("global.addreviews.image")}</label>
           <input
             type="file"
             accept="image/*"
             onChange={(e) => setNewReview({ ...newReview, image: e.target.files ? e.target.files[0] : null })}
           />
-          <button onClick={handleAddReview}>Add</button>
+          <button onClick={handleAddReview}>{t("global.addreviews.add")}</button>
         </div>
       )}
       
@@ -421,7 +424,7 @@ function ReviewPage() {
             </div>
           ))
         ) : (
-          <div>No reviews available</div>
+          <div>{t("global.reviews.noneavail")}</div>
         )}
       </div>
       </div>

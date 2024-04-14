@@ -49,15 +49,21 @@
         "commdesc": "Have to be a paying customer..., etc."
     },
     "reviews": {
-        "title": "Restroom's Review"
-
+        "title": "Restroom's Information",
+        "dashboard": "Dashboard",
+        "addreview": "Add Review",
+        "address": "Address:",
+        "directions":"Building directions:",
+        "comments": "Comments:",
+        "reviewtitle": "Reviews",
+        "noneavail": "No reviews available"
     },
     "addreviews" : {
         "addreview": "Add Review",
         "name": "Name:",
-        "cleanliness": "Cleanliness out of 10:",
-        "amenities": "Amenities out of 10:",
-        "accessibility": "Accessibility out of 10:",
+        "cleanliness": "Cleanliness:",
+        "amenities": "Amenities:",
+        "accessibility": "Accessibility:",
         "description": "Description:",
         "add": "Add",
         "image": "Image:"

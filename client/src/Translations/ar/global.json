@@ -49,14 +49,21 @@
         "commdesc": "يجب أن تكون عميلاً يدفع...، إلخ."
     },
     "reviews": {
-        "title": "مراجعة الحمام"
+        "title": "معلومات الحمام",
+        "dashboard": "لوحة القيادة",
+        "addreview": "إنشاء مراجعة",
+        "address": "عنوان:",
+        "directions":"اتجاهات البناء:",
+        "comments": "تعليقات:",
+        "reviewtitle": "التعليقات",
+        "noneavail": "لا توجد تعليقات متاحة"
     },
     "addreviews" : {
         "addreview": "إنشاء مراجعة",
         "name": "اسم:",
-        "cleanliness": "النظافة من 10:",
-        "amenities": "وسائل الراحة من 10:",
-        "accessibility": "إمكانية الوصول من 10:",
+        "cleanliness": "النظافة:",
+        "amenities": "وسائل الراحة:",
+        "accessibility": "إمكانية الوصول:",
         "description": "وصف:",
         "add": "يخلق",
         "image": "صورة:"

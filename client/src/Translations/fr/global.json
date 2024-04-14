@@ -49,14 +49,21 @@
         "commdesc": "Il faut être un client payant..., etc."
     },
     "reviews": {
-        "title": "Examen des Toilettes"
+        "title": "Informations sur les toilettes",
+        "dashboard": "Tableau de bord",
+        "addreview": "Ajouter un commentaire",
+        "address": "L' Allocution:",
+        "directions":"Directions vers le bâtiment:",
+        "comments": "Commentaires:",
+        "reviewtitle": "Commentaires",
+        "noneavail": "Aucun avis disponible"
     },
     "addreviews" : {
         "addreview": "Ajouter un Commentaire",
         "name": "Nom:",
-        "cleanliness": "Propreté Sur 10:",
-        "amenities": "Commodités Sur 10:",
-        "accessibility": "Accessibilité Sur 10:",
+        "cleanliness": "Propreté:",
+        "amenities": "Commodités:",
+        "accessibility": "Accessibilité:",
         "description": "Description:",
         "add": "Ajouter",
         "image": "Image:"
