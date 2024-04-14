@@ -410,12 +410,12 @@ function ReviewPage() {
           reviewsData.map((review, index) => (
             <div key={index} className={`review-rectangle ${calculateOverallQuality(review) <= 2.5 ? 'light-red' : 'light-green'}`}>
               <div className="reviewer-name">{review.reviewerName}</div>
-              <div className="cleanliness star-rating">{`Cleanliness: ${'★'.repeat(review.cleanliness)}`}</div>
-              <div className="amenities star-rating">{`Amenities: ${'★'.repeat(review.amenities)}`}</div>
-              <div className="accessibility star-rating">{`Accessibility: ${'★'.repeat(review.accessibility)}`}</div>
-              <div className="overall-quality">{`Overall Quality: ${calculateOverallQuality(review).toFixed(2)}/5`}</div>
+              <div className="cleanliness star-rating">{t("global.addreviews.cleanliness")} {`${'★'.repeat(review.cleanliness)}`}</div>
+              <div className="amenities star-rating">{t("global.addreviews.amenities")} {`${'★'.repeat(review.amenities)}`}</div>
+              <div className="accessibility star-rating">{t("global.addreviews.accessibility")} {`${'★'.repeat(review.accessibility)}`}</div>
+              <div className="overall-quality">{t("global.reviews.quality")} {`${calculateOverallQuality(review).toFixed(2)}/5`}</div>
               <div className="description">{review.description}</div>
-              <div className="date">Date: {review.date.toLocaleDateString()}</div>
+              <div className="date">{t("global.reviews.date")} {review.date.toLocaleDateString()}</div>
               {review.image && (
                 <div className="photo">
                   <img src={URL.createObjectURL(review.image)} alt="Review" />

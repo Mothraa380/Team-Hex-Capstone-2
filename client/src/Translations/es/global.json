@@ -56,7 +56,9 @@
         "directions":"Direcciones al edificio:",
         "comments": "Commentarios:",
         "reviewtitle": "Opiniones",
-        "noneavail": "No hay opiniones disponibles"
+        "noneavail": "No hay opiniones disponibles",
+        "quality": "Calidad General:",
+        "date": "Fecha:"
     },
     "addreviews" : {
         "addreview": "Agregar una Opinión",

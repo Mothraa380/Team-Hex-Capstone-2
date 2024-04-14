@@ -56,7 +56,9 @@
         "directions":"Directions vers le bâtiment:",
         "comments": "Commentaires:",
         "reviewtitle": "Commentaires",
-        "noneavail": "Aucun avis disponible"
+        "noneavail": "Aucun avis disponible",
+        "quality": "Qualité Générale:",
+        "date": "La Date:"
     },
     "addreviews" : {
         "addreview": "Ajouter un Commentaire",

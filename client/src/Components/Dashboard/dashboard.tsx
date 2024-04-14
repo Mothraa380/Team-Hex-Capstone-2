@@ -5,6 +5,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import "./dashboard.css"; 
 import { useTranslation } from 'react-i18next';
 import LanguageSelector from '../../Translations/language-selector';
+import { useTextSize } from '../../TextSizeContext.js';
 
 import { db } from "../../firebase.ts";
 import {collection, getDocs, } from 'firebase/firestore';
@@ -565,17 +566,19 @@ function SearchLocation(){
                 marker.infoWindow.close();
             });
         };
+
+        const { scaleFactor } = useTextSize();
           return (
             <div className="saved">
             <div className="sidebar-container">
             <div className="sidebar">
-                <div className="name">
+                <div className="name" style={{ fontSize: `${30 * scaleFactor}px` }}>
                 {t("global.dashboard.title")}
-                  <button className="add-button"><Link to="/add-restroom" style={{ textDecoration: 'none', color: 'inherit'}}>{t("global.dashboard.addPost")}</Link></button>
+                  <button className="add-button"><Link to="/add-restroom" style={{ fontSize: `${16 * scaleFactor}px`, textDecoration: 'none', color: 'inherit'}}>{t("global.dashboard.addPost")}</Link></button>
                 </div>
                 <div className="locationSettings">
                   <button className="setDistance"  onClick={handleDistanceDropdown}>
-                        <span>{t("global.dashboard.within")} </span><span>{distance}</span><span> {t("global.dashboard.distancemetric")} </span>
+                        <span style={{ fontSize: `${20 * scaleFactor}px` }} >{t("global.dashboard.within")} </span><span style={{ fontSize: `${20 * scaleFactor}px` }}>{distance}</span><span style={{ fontSize: `${20 * scaleFactor}px` }}> {t("global.dashboard.distancemetric")} </span>
                       <img
                           src="https://static.thenounproject.com/png/551749-200.png"
                           className="open-dropdown"
@@ -583,12 +586,12 @@ function SearchLocation(){
                         />
                   </button>
                     <div className={`dropdown-contentB ${dropdownOpenB ? 'flex' : 'hidden'}`}>
-                      <span onClick={()=>handleDistanceChange(0.5)}>{t("global.dashboard.within")} 0.5 {t("global.dashboard.distancemetric")}</span>
-                      <span onClick={()=>handleDistanceChange(1.0)}>{t("global.dashboard.within")} 1.0 {t("global.dashboard.distancemetric")}</span>
-                      <span onClick={()=>handleDistanceChange(2.0)}>{t("global.dashboard.within")} 2.0 {t("global.dashboard.distancemetric")}</span>
-                      <span onClick={()=>handleDistanceChange(5.0)}>{t("global.dashboard.within")} 5.0 {t("global.dashboard.distancemetric")}</span>
-                      <span onClick={()=>handleDistanceChange(10.0)}>{t("global.dashboard.within")} 10.0 {t("global.dashboard.distancemetric")}</span>
-                      <span onClick={()=>handleDistanceChange(15.0)}>{t("global.dashboard.within")} 15.0 {t("global.dashboard.distancemetric")}</span>
+                      <span style={{ fontSize: `${16 * scaleFactor}px` }} onClick={()=>handleDistanceChange(0.5)}>{t("global.dashboard.within")} 0.5 {t("global.dashboard.distancemetric")}</span>
+                      <span style={{ fontSize: `${16 * scaleFactor}px` }} onClick={()=>handleDistanceChange(1.0)}>{t("global.dashboard.within")} 1.0 {t("global.dashboard.distancemetric")}</span>
+                      <span style={{ fontSize: `${16 * scaleFactor}px` }} onClick={()=>handleDistanceChange(2.0)}>{t("global.dashboard.within")} 2.0 {t("global.dashboard.distancemetric")}</span>
+                      <span style={{ fontSize: `${16 * scaleFactor}px` }} onClick={()=>handleDistanceChange(5.0)}>{t("global.dashboard.within")} 5.0 {t("global.dashboard.distancemetric")}</span>
+                      <span style={{ fontSize: `${16 * scaleFactor}px` }} onClick={()=>handleDistanceChange(10.0)}>{t("global.dashboard.within")} 10.0 {t("global.dashboard.distancemetric")}</span>
+                      <span style={{ fontSize: `${16 * scaleFactor}px` }} onClick={()=>handleDistanceChange(15.0)}>{t("global.dashboard.within")} 15.0 {t("global.dashboard.distancemetric")}</span>
                     </div>
 
                 </div>
@@ -599,9 +602,9 @@ function SearchLocation(){
                     onMouseEnter={() => highlightMarker(index)} 
                     onClick={()=>handleListItemClick(index)}>
                       <div className="locationInfo">
-                        <span className="name-text">{location.name}</span>
-                        <span className="location-text">{location.address}</span>
-                        <span className="routeDistance">{location.distance} mi / {(location.distance *  1.60934).toFixed(3)} km</span>
+                        <span style={{ fontSize: `${23 * scaleFactor}px` }} className="name-text">{location.name}</span>
+                        <span style={{ fontSize: `${20 * scaleFactor}px` }} className="location-text">{location.address}</span>
+                        <span style={{ fontSize: `${17 * scaleFactor}px` }} className="routeDistance">{location.distance} mi / {(location.distance *  1.60934).toFixed(3)} km</span>
                       </div>
                       <button className="result-sales-button"
                         onClick={()=> navigateToReviewPage(index)}>
@@ -623,13 +626,14 @@ function SearchLocation(){
             </div>
           );
         }
+        const { scaleFactor } = useTextSize();
 
   return (
     <div className="lower-content">
         <SavedSales update={dataLoaded} />
           <div className="search-map">
             <div className="input-container">
-              <input
+              <input style={{ fontSize: `${20 * scaleFactor}px` }}
                 id="locationInput"
                 name="location"
                 type="text"
@@ -638,7 +642,7 @@ function SearchLocation(){
                 onChange={(e) => setLocation(e.target.value)}
                 aria-label="Search Location"
               />
-              <button id="searchButton" type="button" className="searchButton" onClick={handleSearch}>
+              <button style={{ fontSize: `${17 * scaleFactor}px` }} id="searchButton" type="button" className="searchButton" onClick={handleSearch}>
               {t("global.dashboard.search")}
               </button>
               <img className="currentLocationButton" 
@@ -691,25 +695,34 @@ function UserProfile(){
       document.removeEventListener("mousedown", handler);
     }
   })
+  const { increaseTextSize, decreaseTextSize } = useTextSize();
+  const { scaleFactor } = useTextSize();
+  const textSizePercentage = Math.round(scaleFactor * 100);
+
 
 
   return (
     <div className="profile" ref={profileRef}>
             <button type="button"  onClick={handleProfileDropdown}>
             <img
-                src="https://i.pinimg.com/736x/b9/49/0a/b9490abd30c15850908b8ee0570f8b19.jpg"
+                src=".../../../assets/hamburger.png"
                 className="pfp"
                 alt="profile_picture"
               />
             
           </button>
           <div className={`dropdown-content ${dropdownOpen ? 'show' : ''}`}>
-            <a href="https://www.google.com/">{t("global.dropdown.profile")}</a>
-            <a>{t("global.dropdown.settings")}</a>
-            <button className="language-btn" ref={settingsRef} type="button">
+            <div className="size-mod">
+              <button style={{ fontSize: `${16 * scaleFactor}px` }} className="btn-size" onClick={increaseTextSize}>+</button>
+                <p style={{ fontSize: `${16 * scaleFactor}px` }} className="size-display">{textSizePercentage}%</p>
+              <button style={{ fontSize: `${16 * scaleFactor}px` }} className="btn-size" onClick={decreaseTextSize}>-</button>
+            </div>
+            <a style={{ fontSize: `${16 * scaleFactor}px` }} href="https://www.google.com/">{t("global.dropdown.profile")}</a>
+            <a style={{ fontSize: `${16 * scaleFactor}px` }}>{t("global.dropdown.settings")}</a>
+            <button style={{ fontSize: `${16 * scaleFactor}px` }} className="language-btn" ref={settingsRef} type="button">
             {t("global.dropdown.language")}       
             </button >
-            <Link to="/">{t("global.dropdown.signout")}</Link>
+            <Link style={{ fontSize: `${16 * scaleFactor}px` }} to="/">{t("global.dropdown.signout")}</Link>
           </div>
           <div className={`dropdown-content ${languagesOpen ? 'show' : ''}`}>
             <LanguageSelector />
@@ -732,6 +745,9 @@ function Dashboard(){
     
   }, []);
    const {t} = useTranslation();
+
+   const { scaleFactor } = useTextSize();
+
     return(
     <div className="dashboard">
       <div className="topbar">
@@ -743,7 +759,7 @@ function Dashboard(){
                 alt="logo"
               />
             </div>
-            <div className="name">{t("global.header.name")}</div>        
+            <div style={{fontSize: `${45 * scaleFactor}px`}} className="name">{t("global.header.name")}</div>        
           </div>
           {UserProfile()}
       </div>

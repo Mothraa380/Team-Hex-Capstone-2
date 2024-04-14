@@ -414,3 +414,28 @@ ul {
   padding: 10px;
   top: 55px; /* Adjust this value to match the height of the .name element */
 }
+
+.size-mod {
+  display: flex;
+  align-items: center;
+}
+
+.btn-size {
+  background-color: #f8f9fa;
+  color: #5f6368;
+  border: 1px solid #dfe1e5;
+  padding: 8px 12px;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.btn-size:hover {
+  background-color: #f0f0f0;
+}
+
+.size-display {
+  margin: 0 10px;
+  font-weight: bold;
+  font-size: 16px;
+}

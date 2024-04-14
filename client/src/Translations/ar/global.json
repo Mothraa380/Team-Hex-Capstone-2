@@ -56,7 +56,9 @@
         "directions":"اتجاهات البناء:",
         "comments": "تعليقات:",
         "reviewtitle": "التعليقات",
-        "noneavail": "لا توجد تعليقات متاحة"
+        "noneavail": "لا توجد تعليقات متاحة",
+        "quality": "الجودة الشاملة:",
+        "date": "تاريخ:"
     },
     "addreviews" : {
         "addreview": "إنشاء مراجعة",

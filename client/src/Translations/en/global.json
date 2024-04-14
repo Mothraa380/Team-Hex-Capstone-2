@@ -56,7 +56,9 @@
         "directions":"Building directions:",
         "comments": "Comments:",
         "reviewtitle": "Reviews",
-        "noneavail": "No reviews available"
+        "noneavail": "No reviews available",
+        "quality": "Overall Quality:",
+        "date": "Date:"
     },
     "addreviews" : {
         "addreview": "Add Review",
