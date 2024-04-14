@@ -18,7 +18,9 @@
         "search": "Recherche",
         "searchbar": "Emplacement...",
         "within": "Dans un rayon de",
-        "distancemetric": "milles"
+        "distancemetric": "milles",
+        "sortby": "Trier par notes",
+        "ratings": "Pas de notes"
     },
     "dropdown" : {
         "profile": "Profil",
@@ -59,7 +61,8 @@
         "reviewtitle": "Commentaires",
         "noneavail": "Aucun avis disponible",
         "quality": "Qualité Générale:",
-        "date": "La Date:"
+        "date": "La Date:",
+        "navigate": "Naviguer"
     },
     "addreviews" : {
         "addreview": "Ajouter un Commentaire",

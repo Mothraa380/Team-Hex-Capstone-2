@@ -18,7 +18,9 @@
         "search": "Search",
         "searchbar": "Location...",
         "within": "Within",
-        "distancemetric": "miles"
+        "distancemetric": "miles",
+        "sortby": "Sort by ratings",
+        "ratings": "No ratings"
     },
     "dropdown" : {
         "profile": "Profile",
@@ -59,7 +61,8 @@
         "reviewtitle": "Reviews",
         "noneavail": "No reviews available",
         "quality": "Overall Quality:",
-        "date": "Date:"
+        "date": "Date:",
+        "navigate": "Navigate"
     },
     "addreviews" : {
         "addreview": "Add Review",

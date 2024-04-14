@@ -18,7 +18,9 @@
         "search": "يبحث",
         "searchbar": "موقع...",
         "within": "أميال",
-        "distancemetric": "في حدود"
+        "distancemetric": "في حدود",
+        "sortby": "الترتيب حسب التقييمات",
+        "ratings": "بدون تقييم"
     },
     "dropdown" : {
         "profile": "حساب تعريفي",
@@ -59,7 +61,8 @@
         "reviewtitle": "التعليقات",
         "noneavail": "لا توجد تعليقات متاحة",
         "quality": "الجودة الشاملة:",
-        "date": "تاريخ:"
+        "date": "تاريخ:",
+        "navigate": "التنقل"
     },
     "addreviews" : {
         "addreview": "إنشاء مراجعة",

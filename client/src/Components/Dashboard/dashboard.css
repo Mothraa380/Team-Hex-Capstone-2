@@ -6,14 +6,13 @@ html, body{
     padding:0;
     font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
-
 .dashboard{
   width:100%;
   height: inherit;
-  background-color: rgb(210, 208, 208);
+  background-color: rgb(210, 208, 208); 
+  /* rgb(210, 208, 208) */
   padding-bottom: 5px;
 }
-
 .dashboard .topbar {
   z-index: 999;
   display: flex;
@@ -28,13 +27,13 @@ html, body{
   display: flex;
   flex-direction: row;
   align-items: center;
-  }
+}
 .dashboard .content img{
   width: auto; 
   height: 70px; 
   display: block; 
   border-radius: 10px;
-  margin-top: -10px;
+  margin-top: -22px;
 }
 .dashboard .content .name {
   padding-top: 10px;
@@ -65,28 +64,35 @@ html, body{
     padding-top: 20px;
   }
 }
-
 .dashboard .topbar .profile{
   position: fixed;
-  top:5px;
+  top:15px;
   right:0px;
   margin-right: 1%;
   display: inline-block;
 }
 .dashboard .profile img{
-  padding-top: 10px;
-  padding-right: 5px;
-  height: 35px;
+  height: 40px;
+  padding: 4px 2px;
   width: auto;
+  border-radius: 40%;
   align-self: center;
 }
+.dashboard .lower-content #sort-by-ratings:hover {
+  cursor: pointer;
+}
+.dashboard .profile img:hover {
+  cursor: pointer;
+  filter: invert(100%);
+  background-color:  rgb(89, 47, 6);
+}
 .dashboard .profile button {
-  background-color: rgba(0, 0, 0, 0);
   text-align: center;
   padding: 4px 5px;
   border: none;
   cursor: pointer;
-  display: flex;
+  display: block;
+  width: 100%;
 }
 
 .dashboard .profile .language-btn {
@@ -100,7 +106,7 @@ html, body{
   background-color:  #ddd;
 }
 .dashboard .dropdown-content{
-  display: none; /* Initially hide the dropdown content */
+  display: none;
   position: absolute;
   right: 0%;
   top: 100%;
@@ -108,9 +114,20 @@ html, body{
   min-width: 100px;
   overflow: auto;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-  border-radius: 10%;
+  border-radius: 5px;
   z-index: 2;
 }
+
+.dropdown-content {
+  position: absolute;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 8px;
+  z-index: 1;
+}
+
 .dashboard .dropdown-content a {
   color: black;
   padding: 12px 16px;
@@ -123,31 +140,27 @@ html, body{
 .dashboard .show {
   display: block; /* Display the dropdown content when the "show" class is added */
 }
-.dashboard .sidebar .locationSettings .dropdown-contentB.flex {
-  display: flex; /* Display the dropdown content when the "show" class is added */
+.dashboard .lower-content .saved .sidebar-container .sidebar .locationSettings .dropdown-contentB.flex {
+  display: flex;
 }
-
-.dashboard .sidebar .locationSettings .dropdown-contentB.hidden {
+.dashboard .lower-content .saved .sidebar-container .sidebar .locationSettings .dropdown-contentB.hidden {
   display: none; /* Display the dropdown content when the "show" class is added */
 }
-
 /* going into dangerous territory */
 .dashboard .lower-content{
   flex-direction: row;
-  /* height: calc(100vh - 90px);
-  padding-top: 90px;padding-top: 103px; */
   height: inherit;
-  min-height: 600px;
+  min-height: 500px;
   padding-top: 86px;
   display: flex;
   width: 100%;
   gap: 5px;
 }
 .dashboard .lower-content .saved .sidebar-container{
-  position: sticky;
+  position: relative;
   max-width: 30vw;
-  min-width: 450px;
-  height: 100%;
+  min-width: 490px;
+  height: inherit;
   display: block;
   border-radius: 10px;
   flex: 1;
@@ -155,28 +168,45 @@ html, body{
 }
 .dashboard .lower-content .saved .sidebar{
   position: absolute;
-  max-width: 30vw;
-  min-width: 450px;
-  height: inherit;
+  max-width: 40vw;
+  min-width: 490px;
+  height: calc(100vh - 100px);
+  min-height: 645px;
   background-color: #f2f2f2; 
   display: block;
   border-radius: 10px;
   flex: 1;
   margin-left: 5px;
+}
+
+@media(max-width: 1300px)
+{
+  .dashboard .lower-content .saved .sidebar-container{
+    min-width:400px;
+  }
+  .dashboard .lower-content .saved .sidebar{
+    min-width:400px;
+  }
+}
+
+.dashboard .lower-content .saved .sidebar .displayLocations{
+  height:calc(100vh - 200px);
+  min-height: 500px;
   overflow-y: auto;
 }
-.dashboard .sidebar .name{
+.dashboard .sidebar .sidebar-top .name{
   color: white;
   width: auto;
   font-size: 30px;
   text-align:left;
   background-color: rgb(40, 40, 135);
-  border-top-left-radius: 10px; /* Adjust this value */
+  /* rgb(40, 40, 135) */
+  border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   padding: 10px;
   display: flex;
-  flex-direction: row; /* Change to row */
-  justify-content: space-between; /* Distribute items along the main axis */
+  flex-direction: row; 
+  justify-content: space-between;
   align-items: center;
 }
 .dashboard .sidebar .name button{
@@ -184,15 +214,27 @@ html, body{
   padding: 10px;
 }
 .dashboard .sidebar .name button:hover{
-  background-color:  rgb(26, 26, 197);
+  filter: invert(100%);
+  background-color:  rgb(89, 47, 6);
 }
-
-.dashboard .sidebar .locationSettings{
-    background-color: rgb(237, 237, 236);
-    padding: 10px;
-    position: sticky;
+.add-button:hover{
+  filter: invert(100%);
+  background-color:  rgb(89, 47, 6);
 }
-.dashboard .sidebar .locationSettings .setDistance {
+.viewMapButton:hover{
+  filter: invert(100%);
+  background-color:  rgb(89, 47, 6);
+}
+.dashboard .sidebar .sidebar-top .locationSettings{
+  padding: 10px;
+  background-color: rgb(223, 225, 245);
+  top: 55px;
+}
+.checkboxAndDistance {
+  display: flex;
+  align-items: center;
+}
+.dashboard .sidebar .sidebar-top .locationSettings .setDistance {
   border: none;
   font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   font-size: 20px;
@@ -200,38 +242,34 @@ html, body{
   border-radius: 4px;
   height: auto;
   background-color: whitesmoke;
+  margin-left: auto;
+  color: black;
 }
-.dashboard .sidebar .locationSettings .setDistance img{
+.dashboard .sidebar .sidebar-top .locationSettings .setDistance img{
   height: 10px;
 }
-.dashboard .sidebar .locationSettings .setDistance:hover{
+.dashboard .sidebar .sidebar-top .locationSettings .setDistance:hover{
   background-color: rgb(199, 198, 198);
   cursor: pointer;
 }
- /* .dashboard .sidebar .locationSettings .dropdown-contentB{
+.dashboard .sidebar .sidebar-top .locationSettings .dropdown-contentB{
   display: none;
-  left: 10%;
-  top: 80%;
-  position: absolute;
-  width: fit-content;
-  display: flex;
-  flex-direction: column;
-}  */
-.dashboard .sidebar .locationSettings .dropdown-contentB{
-  display: none; /* Initially hide the dropdown content */
   background-color: white;
   overflow: auto;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-  border-radius: 10%;
-  left: 10%;
+  border-radius: 5px;
+  right: 0%;
   top: 80%;
   position: absolute;
   flex-direction: column;
+  right: 2%;
+  top: 90%;
+  z-index: 0;
 } 
-.dashboard .sidebar .locationSettings .dropdown-contentB span{
+.dashboard .sidebar .sidebar-top .locationSettings .dropdown-contentB span{
   padding: 10px;
 }
-.dashboard .sidebar .locationSettings .dropdown-contentB span:hover{
+.dashboard .sidebar .sidebar-top .locationSettings .dropdown-contentB span:hover{
   cursor: pointer;
   background-color: #ddd;
 }
@@ -244,8 +282,7 @@ html, body{
   background-color: rgb(225, 225, 245);
   box-shadow: 1px 1px 1px 1px rgba(54, 20, 179, 0.316);
 }
-
-.dashboard .sidebar-container .sidebar .location-text {
+.dashboard .sidebar-container .sidebar .sidebar-top .location-text {
   flex: 1; /* Take up remaining space */
   font-weight:300;
 }
@@ -253,15 +290,15 @@ html, body{
   flex: 1; /* Take up remaining space */
   font-weight:300;
   font-size: 17px;
+  margin-right: 10px;
 }
-.dashboard .sidebar-container .sidebar .name-text {
+.dashboard .sidebar-container .sidebar .sidebar-top .name-text {
   flex: 1; /* Take up remaining space */
   font-size: 23px;
   font-weight: 540;
 }
-
 .dashboard .sidebar-container .sidebar li:hover{
-  background-color: rgb(184, 184, 220);
+  background-color: rgba(118, 145, 233, 0.518);
   cursor:pointer;
 }
 .dashboard .lower-content .search-map{
@@ -269,82 +306,89 @@ html, body{
   flex-direction: column;
   width: 100%;
   height: inherit;
-  min-height: 600px;
+  min-height: 500px;
   padding-right: 5px;
+  padding-left: 1px;
+  padding-top: 1px;
 }
 .dashboard .lower-content .search-map .input-container{
-  padding-left: 0px;
-  padding-top: 0px;
   display: flex;
   flex-direction: row;
   white-space: nowrap;
-  min-width: 80%; /*when window maximized, take entire top bar*/
+  min-width: 40%; /*when window maximized, take entire top bar*/
   min-height: 10px;
   margin-bottom: 10px;
+  background-color: rgb(40, 40, 135); 
+  /* rgb(15, 15, 104) */
+  margin-left: 0;
+  padding: 2px 4px 10px 8px;
+  border-radius: 5px;
 }
 .dashboard .input-container input{
   font-size: 20px;
   padding-left: 10px;
-  min-width: 300px;
+  min-width: 50px;
   padding: 6px;
   margin-top: 8px;
   margin-right: 8px;
-  width: 500px;
+  max-width: 100%;
   border-radius: 10px;
   border: none;
   flex: 1;
 }
-.dashboard .input-container .searchButton{
-  padding: 6px;
-  margin-top: 9px;
-  margin-right: 16px;
-  margin-left: 0px;
-  height: 38px;
-  background: rgb(157, 222, 248);
+.dashboard .lower-content .input-container .searchButton{
+  padding: 10px;
+  margin-top: 8px;
+  margin-bottom: -7px;
+  margin-right: 20px;
+  margin-left: -30px;
+  height: 42px;
+  background: rgb(72, 72, 185);
+  color: white;
   font-size: 17px;
-  border: black;
   cursor: pointer;
-  border-radius: 10%;
+  border: none;
+  border-right: 2px solid white;
   z-index: 1;
 }
 .dashboard .input-container .currentLocationButton{
-  padding-top: 10px;
-  width: 150px; 
-  height: auto; 
+  margin-top: 8px;
+  margin-left: -24px;
+  margin-right: 4px;
+  padding-top: 5px;
+  padding-left: 5px;
+  padding: 2px 10px 2px 15px;
+  width: auto; 
+  height: 38px; 
   display: block; 
   border-radius: 10px;
   cursor: pointer;
+  background-color: rgb(72, 72, 185);
 }
-.dashboard .lower-content img:hover{
-  filter: brightness(85%);
+.dashboard .lower-content .currentLocationButton:hover{
+  filter: invert(100%);
+  background-color:  rgb(89, 47, 6);
 }
-
 .dashboard .lower-content .searchButton:hover{
-  background-color:  rgb(104, 183, 214);
+  filter: invert(100%);
+  background-color:  rgb(89, 47, 6);
 }
-
 .dashboard .lower-content .search-map .map{
-  height: calc(100vh - 148px);
-  min-height: 638px;
+  min-height: 575px;
+  height: calc(100vh - 162px);
   position: relative;
   width:100%;
+  min-width: 60%;
   flex-grow: 1;
   flex-shrink: 1;
   border-radius: 10px;
+  margin-right: 4px;
+  margin-top: -3px;
 }
-
-@media(max-width: 1220px)
-{
-  .dashboard .lower-content .search-map .map{
-    height: calc(100vh - 166px);
-  }
-}
-
 ul {
   padding: 7px;
   list-style-type: none;
 }
-
 .result-sales-button {
   background-color: purple;
   color: white;
@@ -353,23 +397,50 @@ ul {
   border-radius: 5px;
   margin-right: -5px;
   margin-top: 5px;
-  height: 60px;
-  width: 60px;
+  margin-left: 5px;
+  height: 57px;
+  width: 57px;
   cursor: pointer;
   border-radius: 50%;
+}
+.navigate-button {
+  background-color: purple;
+  color: white;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  padding: 4px;
+  width: 100%;
 }
 .result-sales-button img{
   height:20px;
   width: auto;
   border-radius: 50%;
 }
-.add-button {
+.buttons{
+  display: flex;
+  flex-direction: row;  
+}
+.buttons .add-button {
   color: white;
   border: none;
-  padding: 5px;
+  padding: 10px;
+  padding-left: 10px;
   border-radius: 5px;
-  margin-left: 5px;
+  margin-bottom: -2px;
+  margin-left: 3px;
   cursor: pointer;
+  background-color: rgb(72, 72, 185);
+}
+.buttons .viewMapButton {
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: -2px;
+  cursor: pointer;
+  background-color: rgb(72, 72, 185);
+  display: none;
 }
 .locationInfo {
   flex: 1;
@@ -377,44 +448,172 @@ ul {
   flex-direction: column;
   align-items: left;
 }
-
 .result-sales-button:hover {
-  background-color: rgb(104, 183, 214);
+  filter: invert(100%);
+  background-color:  rgb(21, 239, 28);
 }
-
-.routeDistance {
-  margin-right: 10px; /* Adjust spacing between distance and review button */
+.navigate-button:hover {
+  filter: invert(100%);
+  background-color:  rgb(21, 239, 28);
 }
-.dashboard .sidebar .name,
-.dashboard .sidebar .locationSettings {
+.dashboard .sidebar-container .sidebar .sidebar-top{
   position: sticky;
-  top: 0;
+  top: 77px;
   z-index: 1;
-  background-color: rgb(40, 40, 135);
 }
-
-.dashboard .sidebar .name {
-  color: white;
-  font-size: 30px;
-  padding: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.dashboard .sidebar .name button {
+.dashboard .sidebar .sidebar-top .name button {
   background-color: rgb(72, 72, 185);
+  color: white;
   padding: 10px;
 }
-
-.dashboard .sidebar .name button:hover {
-  background-color: rgb(26, 26, 197);
+.dashboard .sidebar .sidebar-top .name button:hover {
+  filter: invert(100%);
+  background-color:  rgb(89, 47, 6);
+}
+/* Custom scrollbar track */
+::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}
+/* Custom scrollbar thumb */
+::-webkit-scrollbar-thumb {
+  background-color: #b5b5b5;
+  border-radius: 10px;
+}
+/* Custom scrollbar corner */
+::-webkit-scrollbar-corner {
+  background-color: #f1f1f1;
+}
+/* Optional: Hide scrollbar when not hovering */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+/* Show scrollbar on hover */
+::-webkit-scrollbar:hover {
+  display: block;
 }
 
-.dashboard .sidebar .locationSettings {
-  background-color: rgb(237, 237, 236);
-  padding: 10px;
-  top: 55px; /* Adjust this value to match the height of the .name element */
+@media  (max-width: 900px) {
+  .buttons .viewMapButton{
+    display: block;
+  }
+  .dashboard .lower-content .search-map {
+    order: -1; 
+    min-height: 0px;
+    height: 65px;
+    top:0px;
+  }
+  .dashboard .lower-content .search-map .map{
+    left: 0px;
+    position: absolute;
+    top: 170px;
+    min-height: 50px;
+    min-width: none;
+    height: 400px;
+    width: 99%;
+    z-index: 1;
+  }
+  .dashboard .lower-content{
+    min-width: 100px;
+    max-width: 100%;
+    width: 100%;
+    min-height: 100%;
+    height: 100%;
+    flex-direction: column;
+    }
+  .dashboard .lower-content .saved{
+    max-height: none;
+    min-height: none;
+    min-width: 100px;
+    max-width: 100%;
+    width: 100%;
+    }
+
+  .dashboard .lower-content .saved .sidebar-container{
+    max-height: 100%;
+    min-height: 300px;
+    height: 78vh;
+    max-width: 500px;
+    min-width: 100px;
+    max-width: 100%;
+    width: 100%;
+    }
+
+    /* original display */
+
+  .dashboard .lower-content .saved .sidebar{
+    min-height: 80%;
+    max-width: 100vw;
+    min-width: 50px;
+    height: 100%;
+    width: inherit;
+    margin-left: 0;
+    }
+  .dashboard .lower-content .saved .sidebar.modified{
+    margin-left: 0;
+    margin-right: 0;
+    min-height: 80%;
+    max-width: 100vw;
+    min-width: 50px;
+    height: 160%;
+    width: inherit;
+  }
+
+  .dashboard .lower-content .saved .sidebar .displayLocations{
+    min-width: 50px;
+    min-height: 300px;
+    height: 440px;
+  }
+  .dashboard .lower-content .saved .sidebar .displayLocations.modified{
+    padding-top: 400px;
+    min-width: 50px;
+    min-height: 300px;
+    height: 380px;
+  }
+  .dashboard .lower-content .search-map .input-container{
+    left: 0;
+    background-color: rgb(40, 40, 135);
+    padding: 2px 4px 10px 6px;
+    border-radius: 5px;
+    position: sticky;
+    top:0px;
+    margin-left: -3px;
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .dashboard .input-container input{
+    max-width: none;
+    width: 100%;
+    margin-left: 5px;
+  } 
+  .dashboard .sidebar-container .sidebar .sidebar-top{
+    top: 77;
+  }
+  .dashboard .sidebar .sidebar-top .locationSettings .dropdown-contentB{
+    right: 1.4%;
+    top: 90%;
+  } 
+  .dashboard{
+    min-width: 100px;
+    max-width: 100%;
+    width: 100%;
+    margin-left: 0;
+    left: 0;
+    top: 0;
+    min-height: 100px;
+    max-height: fit-content;
+    height: 100%;
+    overflow-x: hidden;
+  }
+  .dashboard .input-container .currentLocationButton{
+    margin-right: 5px;
+  }
+  .result-sales-button {
+    height: 50px;
+    width: 50px;
+    margin-right: 0px;
+  }
 }
 
 .size-mod {
@@ -424,7 +623,7 @@ ul {
 }
 
 .btn-size {
-  background-color: #f8f9fa;
+  background-color: #fff;
   color: black;
   border: 1px solid #dfe1e5;
   padding: 8px 12px;
@@ -471,3 +670,20 @@ ul {
   z-index: 2;
   border: 1px solid rgba(206, 196, 196, 0.664);
 }
+
+.lang-btn {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 8px;
+  background-color: transparent;
+  border: 2px solid rgba(206, 196, 196, 0.664);
+  cursor: pointer;
+  font-size: 16px; /* Adjust font size as needed */
+  color: #333;
+  text-align: center;
+  margin-top: 8px;
+  align-items: center;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+

@@ -1,12 +1,12 @@
 import { useTranslation } from 'react-i18next';
-import { useTextSize } from '../TextSizeContext';
 import React, { useEffect } from "react";
+import { useTextSize } from '../TextSizeContext';
 
 const languages = [
     {code: "en", lang: "English"},
-    {code: "es", lang: "Spanish"},
-    {code: "fr", lang: "French"},
-    {code: "ar", lang: "Arabic"},
+    {code: "es", lang: "Español"},
+    {code: "fr", lang: "Français"},
+    {code: "ar", lang: "عربي"},
 ];
 
 const LanguageSelector = () => {
@@ -16,10 +16,10 @@ const LanguageSelector = () => {
         i18n.changeLanguage(lng);
     };
 
-    useEffect(() => {
+    /*useEffect(() => {
         document.body.dir = i18n.dir()
     }, [i18n, i18n.language]) //This code switches from LTR to RTL
-
+*/
     const { scaleFactor } = useTextSize();
     return (
         <div className="btn-container">

@@ -18,7 +18,9 @@
         "search": "Buscar",
         "searchbar": "Ubicación...",
         "within": "Dentro de",
-        "distancemetric": "millas"
+        "distancemetric": "millas",
+        "sortby": "Ordenar por calificaciones",
+        "ratings": "No hay calificaciones"
     },
     "dropdown" : {
         "profile": "Perfil",
@@ -59,7 +61,8 @@
         "reviewtitle": "Opiniones",
         "noneavail": "No hay opiniones disponibles",
         "quality": "Calidad General:",
-        "date": "Fecha:"
+        "date": "Fecha:",
+        "navigate": "Navegar"
     },
     "addreviews" : {
         "addreview": "Agregar una Opinión",
