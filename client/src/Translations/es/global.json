@@ -25,7 +25,8 @@
         "settings" : "Ajustes",
         "language" : "Idioma",
         "signout" : "Desconectar",
-        "return" : "Regresar"
+        "return" : "Regresar",
+        "textsize": "Tamaño del Texto"
     },
     "addrestroom": {
         "title": "Enviar un Baño",

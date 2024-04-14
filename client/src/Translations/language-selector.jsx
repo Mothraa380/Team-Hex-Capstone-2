@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { useTextSize } from '../TextSizeContext';
 import React, { useEffect } from "react";
 
 const languages = [
@@ -15,15 +16,16 @@ const LanguageSelector = () => {
         i18n.changeLanguage(lng);
     };
 
-    /*useEffect(() => {
+    useEffect(() => {
         document.body.dir = i18n.dir()
-    }, [i18n, i18n.language])*/ //This code switches from LTR to RTL
+    }, [i18n, i18n.language]) //This code switches from LTR to RTL
 
+    const { scaleFactor } = useTextSize();
     return (
         <div className="btn-container">
             {languages.map((lng) => {
                 return (
-                    <button className={lng.code === i18n.language ? "selected" : ""} key={lng.code} onClick={()=>changeLanguage(lng.code)}>{lng.lang}</button>
+                    <button style={{ fontSize: `${16 * scaleFactor}px` }} className={lng.code === i18n.language ? "selected" : ""} key={lng.code} onClick={()=>changeLanguage(lng.code)}>{lng.lang}</button>
                 );
             })}
     </div>

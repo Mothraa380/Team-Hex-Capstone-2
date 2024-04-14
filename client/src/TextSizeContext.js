@@ -6,7 +6,7 @@ export const useTextSize = () => useContext(TextSizeContext);
 
 export const TextSizeProvider = ({ children }) => {
   const MAX_SCALE_FACTOR = 2; // Maximum allowed scale factor
-  const MIN_SCALE_FACTOR = 0.5; // Minimum allowed scale factor
+  const MIN_SCALE_FACTOR = 1; // Minimum allowed scale factor
 
   const [scaleFactor, setScaleFactor] = useState(() => {
     // Load scaleFactor from localStorage if available, otherwise default to 1

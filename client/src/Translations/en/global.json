@@ -25,7 +25,8 @@
         "settings" : "Settings",
         "language" : "Language",
         "signout" : "Sign Out",
-        "return" : "Return"
+        "return" : "Return",
+        "textsize": "Text Size"
     },
     "addrestroom": {
         "title": "Submit a Restroom",

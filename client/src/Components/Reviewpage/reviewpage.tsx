@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { db } from "../../firebase.ts";
 import { doc, getDoc, collection, query, where, getDocs, addDoc } from 'firebase/firestore';
 import { useTranslation } from 'react-i18next';
+import { useTextSize } from '../../TextSizeContext.js';
 import "./reviewpage.css";
 
 // Define a custom interface for restroom data
@@ -320,21 +321,22 @@ function ReviewPage() {
   console.log("Reviews data:", );
 
   const {t} = useTranslation();
+  const { scaleFactor } = useTextSize();
   return (
     <div className="review-page">
       <div className="header-container">
-        <button className="add-review-btn" onClick={() => setAddingReview(true)}>
+        <button style={{ fontSize: `${14 * scaleFactor}px` }} className="add-review-btn" onClick={() => setAddingReview(true)}>
         {t("global.reviews.addreview")}
         </button>
-        <div className="review-header">{t("global.reviews.title")}</div>
-        <button onClick={handleDashboardReturn} className="go-back-btn">{t("global.reviews.dashboard")}</button>
+        <div style={{ fontSize: `${24 * scaleFactor}px` }} className="review-header">{t("global.reviews.title")}</div>
+        <button style={{ fontSize: `${14 * scaleFactor}px` }} onClick={handleDashboardReturn} className="go-back-btn">{t("global.reviews.dashboard")}</button>
       </div>
       <div className="place-details">
         <div className="place-info-container">
           <div className="place-info">
-          <div className="place-name">{restroomData?.name}</div>
-          <div className="place-address">{t("global.reviews.address")} {restroomData?.address}</div>
-          <div className="place-directions">{t("global.reviews.directions")} {restroomData?.direction}</div>
+          <div style={{ fontSize: `${24 * scaleFactor}px` }} className="place-name">{restroomData?.name}</div>
+          <div style={{ fontSize: `${18 * scaleFactor}px` }} className="place-address">{t("global.reviews.address")} {restroomData?.address}</div>
+          <div style={{ fontSize: `${18 * scaleFactor}px` }} className="place-directions">{t("global.reviews.directions")} {restroomData?.direction}</div>
           <div className="map" id="map"></div>
           <div className="route-steps-container">
             {/* <p>Street Directions</p>
@@ -349,22 +351,22 @@ function ReviewPage() {
       ))} */}
     </div>
           </div>
-      <div className="place-comments">{t("global.reviews.comments")} {restroomData?.comments}</div>
+      <div style={{ fontSize: `${18 * scaleFactor}px` }} className="place-comments">{t("global.reviews.comments")} {restroomData?.comments}</div>
       <div className="image-container">
       <img src="Comp/Reviewpage/Handicap_toliet_2.jpg" alt="Place Image" /> 
       </div>
       </div>
       </div>
-      <div className="review-bar">{t("global.reviews.reviewtitle")}</div>
+      <div style={{ fontSize: `${24 * scaleFactor}px` }} className="review-bar">{t("global.reviews.reviewtitle")}</div>
       {addingReview && (
         <div className="add-review-dropdown">
-          <label>{t("global.addreviews.name")}</label>
+          <label style={{ fontSize: `${16 * scaleFactor}px` }}>{t("global.addreviews.name")}</label>
           <input
             type="text"
             value={newReview.reviewerName}
             onChange={(e) => setNewReview({ ...newReview, reviewerName: e.target.value })}
           />
-          <label>{t("global.addreviews.cleanliness")}</label>
+          <label style={{ fontSize: `${16 * scaleFactor}px` }}>{t("global.addreviews.cleanliness")}</label>
           <input
             type="range"
             min={0}
@@ -372,7 +374,7 @@ function ReviewPage() {
             value={newReview.cleanliness}
             onChange={(e) => setNewReview({ ...newReview, cleanliness: parseFloat(e.target.value) })}
           />
-          <label>{t("global.addreviews.amenities")}</label>
+          <label style={{ fontSize: `${16 * scaleFactor}px` }}>{t("global.addreviews.amenities")}</label>
           <input
             type="range"
             min={0}
@@ -380,7 +382,7 @@ function ReviewPage() {
             value={newReview.amenities}
             onChange={(e) => setNewReview({ ...newReview, amenities: parseFloat(e.target.value) })}
           />
-          <label>{t("global.addreviews.accessibility")}</label>
+          <label style={{ fontSize: `${16 * scaleFactor}px` }}>{t("global.addreviews.accessibility")}</label>
           <input
             type="range"
             min={0}
@@ -388,19 +390,19 @@ function ReviewPage() {
             value={newReview.accessibility}
             onChange={(e) => setNewReview({ ...newReview, accessibility: parseFloat(e.target.value) })}
           />
-          <label>{t("global.addreviews.description")}</label>
+          <label style={{ fontSize: `${16 * scaleFactor}px` }}>{t("global.addreviews.description")}</label>
           <input
             type="text"
             value={newReview.description}
             onChange={(e) => setNewReview({ ...newReview, description: e.target.value })}
           />
-          <label>{t("global.addreviews.image")}</label>
+          <label style={{ fontSize: `${16 * scaleFactor}px` }}>{t("global.addreviews.image")}</label>
           <input
             type="file"
             accept="image/*"
             onChange={(e) => setNewReview({ ...newReview, image: e.target.files ? e.target.files[0] : null })}
           />
-          <button onClick={handleAddReview}>{t("global.addreviews.add")}</button>
+          <button style={{ fontSize: `${14 * scaleFactor}px` }} onClick={handleAddReview}>{t("global.addreviews.add")}</button>
         </div>
       )}
       
@@ -409,13 +411,13 @@ function ReviewPage() {
         {reviewsData.length > 0 ? (
           reviewsData.map((review, index) => (
             <div key={index} className={`review-rectangle ${calculateOverallQuality(review) <= 2.5 ? 'light-red' : 'light-green'}`}>
-              <div className="reviewer-name">{review.reviewerName}</div>
-              <div className="cleanliness star-rating">{t("global.addreviews.cleanliness")} {`${'★'.repeat(review.cleanliness)}`}</div>
-              <div className="amenities star-rating">{t("global.addreviews.amenities")} {`${'★'.repeat(review.amenities)}`}</div>
-              <div className="accessibility star-rating">{t("global.addreviews.accessibility")} {`${'★'.repeat(review.accessibility)}`}</div>
-              <div className="overall-quality">{t("global.reviews.quality")} {`${calculateOverallQuality(review).toFixed(2)}/5`}</div>
-              <div className="description">{review.description}</div>
-              <div className="date">{t("global.reviews.date")} {review.date.toLocaleDateString()}</div>
+              <div style={{ fontSize: `${16 * scaleFactor}px` }} className="reviewer-name">{review.reviewerName}</div>
+              <div style={{ fontSize: `${20 * scaleFactor}px` }} className="cleanliness star-rating">{t("global.addreviews.cleanliness")} {`${'★'.repeat(review.cleanliness)}`}</div>
+              <div style={{ fontSize: `${20 * scaleFactor}px` }} className="amenities star-rating">{t("global.addreviews.amenities")} {`${'★'.repeat(review.amenities)}`}</div>
+              <div style={{ fontSize: `${20 * scaleFactor}px` }} className="accessibility star-rating">{t("global.addreviews.accessibility")} {`${'★'.repeat(review.accessibility)}`}</div>
+              <div style={{ fontSize: `${16 * scaleFactor}px` }} className="overall-quality">{t("global.reviews.quality")} {`${calculateOverallQuality(review).toFixed(2)}/5`}</div>
+              <div style={{ fontSize: `${16 * scaleFactor}px` }} className="description">{review.description}</div>
+              <div style={{ fontSize: `${16 * scaleFactor}px` }} className="date">{t("global.reviews.date")} {review.date.toLocaleDateString()}</div>
               {review.image && (
                 <div className="photo">
                   <img src={URL.createObjectURL(review.image)} alt="Review" />
@@ -424,7 +426,7 @@ function ReviewPage() {
             </div>
           ))
         ) : (
-          <div>{t("global.reviews.noneavail")}</div>
+          <div style={{ fontSize: `${16 * scaleFactor}px` }}>{t("global.reviews.noneavail")}</div>
         )}
       </div>
       </div>

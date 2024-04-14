@@ -25,7 +25,8 @@
         "settings" : "إعدادات",
         "language" : "لغة",
         "signout" : "خروج",
-        "return" : "يعود"
+        "return" : "يعود",
+        "textsize": "حجم الخط"
     },
     "addrestroom": {
         "title": "إرسال مرحاض",

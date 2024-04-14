@@ -712,21 +712,24 @@ function UserProfile(){
             
           </button>
           <div className={`dropdown-content ${dropdownOpen ? 'show' : ''}`}>
-            <div className="size-mod">
-              <button style={{ fontSize: `${16 * scaleFactor}px` }} className="btn-size" onClick={increaseTextSize}>+</button>
-                <p style={{ fontSize: `${16 * scaleFactor}px` }} className="size-display">{textSizePercentage}%</p>
-              <button style={{ fontSize: `${16 * scaleFactor}px` }} className="btn-size" onClick={decreaseTextSize}>-</button>
-            </div>
-            <a style={{ fontSize: `${16 * scaleFactor}px` }} href="https://www.google.com/">{t("global.dropdown.profile")}</a>
-            <a style={{ fontSize: `${16 * scaleFactor}px` }}>{t("global.dropdown.settings")}</a>
-            <button style={{ fontSize: `${16 * scaleFactor}px` }} className="language-btn" ref={settingsRef} type="button">
+            <a style={{ fontSize: `${18 * scaleFactor}px` }} href="https://www.google.com/">{t("global.dropdown.profile")}</a>
+            <a style={{ fontSize: `${18 * scaleFactor}px` }}>{t("global.dropdown.settings")}</a>
+            <button style={{ fontSize: `${18 * scaleFactor}px` }} className="language-btn" ref={settingsRef} type="button">
             {t("global.dropdown.language")}       
             </button >
-            <Link style={{ fontSize: `${16 * scaleFactor}px` }} to="/">{t("global.dropdown.signout")}</Link>
+            <div className="size-mod">
+              <button style={{ fontSize: `${30 * scaleFactor}px` }} className="btn-size" onClick={decreaseTextSize}>-</button>
+              <div className="size-info">
+                <p style={{ fontSize: `${12 * scaleFactor}px` }} className="size-label">{t("global.dropdown.textsize")}</p>
+                <p style={{ fontSize: `${18 * scaleFactor}px` }} className="size-display">{textSizePercentage}%</p>
+              </div>
+              <button style={{ fontSize: `${30 * scaleFactor}px` }} className="btn-size" onClick={increaseTextSize}>+</button>
+            </div>
+            <Link style={{ fontSize: `${18 * scaleFactor}px` }} to="/">{t("global.dropdown.signout")}</Link>
           </div>
           <div className={`dropdown-content ${languagesOpen ? 'show' : ''}`}>
             <LanguageSelector />
-            <a ref={backRef}>{t("global.dropdown.return")}</a>
+            <a style={{ fontSize: `${18 * scaleFactor}px` }} ref={backRef}>{t("global.dropdown.return")}</a>
           </div>
 
           <div>

@@ -25,7 +25,8 @@
         "settings" : "Paramètres",
         "language" : "Langue",
         "signout" : "Se Déconnecter",
-        "return" : "Retour"
+        "return" : "Retour",
+        "textsize": "Taille du Texte"
     },
     "addrestroom": {
         "title": "Soumettre des Toilettes",
