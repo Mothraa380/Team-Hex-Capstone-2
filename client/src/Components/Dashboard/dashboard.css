@@ -87,13 +87,21 @@ html, body{
   background-color:  rgb(89, 47, 6);
 }
 .dashboard .profile button {
-  background-color: rgb(58, 185, 235);
   text-align: center;
   padding: 4px 5px;
   border: none;
-  border-radius: 10px;
   cursor: pointer;
+  display: block;
+  width: 100%;
 }
+
+.dashboard .profile .language-btn {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
 .dashboard .profile button:hover{
   background-color:  #ddd;
 }
@@ -109,6 +117,17 @@ html, body{
   border-radius: 5px;
   z-index: 2;
 }
+
+.dropdown-content {
+  position: absolute;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 8px;
+  z-index: 1;
+}
+
 .dashboard .dropdown-content a {
   color: black;
   padding: 12px 16px;
@@ -596,3 +615,75 @@ ul {
     margin-right: 0px;
   }
 }
+
+.size-mod {
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(206, 196, 196, 0.664);
+}
+
+.btn-size {
+  background-color: #fff;
+  color: black;
+  border: 1px solid #dfe1e5;
+  padding: 8px 12px;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.btn-size:hover {
+  background-color: #f0f0f0;
+}
+
+.size-display {
+  margin: 0 10px;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.size-label {
+  font-size: 12px;
+  color: black;
+  text-align: center;
+}
+
+.size-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.btn-container {
+  position: relative;
+  top: 100%;
+  left: 0;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  /*position: absolute;*/
+  right: 0%;
+  background-color: white;
+  min-width: 100px;
+  overflow: auto;
+  z-index: 2;
+  border: 1px solid rgba(206, 196, 196, 0.664);
+}
+
+.lang-btn {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 8px;
+  background-color: transparent;
+  border: 2px solid rgba(206, 196, 196, 0.664);
+  cursor: pointer;
+  font-size: 16px; /* Adjust font size as needed */
+  color: #333;
+  text-align: center;
+  margin-top: 8px;
+  align-items: center;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
