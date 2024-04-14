@@ -15,7 +15,15 @@ function Homepage() {
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearch = () => {
-    navigate(`/dashboard?address=${encodeURIComponent(searchQuery)}`);
+    if (searchQuery.trim()) { // Ensure the query is not empty
+        navigate(`/dashboard?address=${encodeURIComponent(searchQuery)}`);
+    }
+  };
+
+  const handleEnterKey = (event) => {
+    if (event.key === 'Enter') {
+      handleSearch();
+    }
   };
 
   const handleSearchByLocation = () => {
@@ -33,15 +41,34 @@ function Homepage() {
       version: 'weekly',
       libraries: ['places', 'geometry'],
     });
-    // Initialize the SearchBox after the API is loaded
+
+    let autocomplete;
+
+    const handleAutocompleteSelect = (selectedAddress) => {
+      console.log("Selected address:", selectedAddress); // For debugging
+      navigate(`/dashboard?address=${encodeURIComponent(selectedAddress)}`);
+    };
+    
     loader.load().then(() => {
-      const autocomplete = new window.google.maps.places.Autocomplete(searchInputRef.current);
-      autocomplete.addListener('place_changed', () => {
-        const place = autocomplete.getPlace();
-        // Here you could update the search query state, navigate, or any other logic you need
-      });
+      if (searchInputRef.current) {
+        const autocomplete = new window.google.maps.places.Autocomplete(searchInputRef.current);
+        autocomplete.addListener('place_changed', () => {
+          const place = autocomplete.getPlace();
+          if (place.geometry) {
+            handleAutocompleteSelect(place.formatted_address);
+          }
+        });
+      }
     });
-  }, []);
+  
+    // Clean up function to remove the autocomplete listener
+    return () => {
+      if (autocomplete) {
+        window.google.maps.event.clearInstanceListeners(autocomplete);
+      }
+    };
+  }, []); // Empty dependency array means this effect will only run once when the component mounts
+  
 
   return (
     <div className="page">
@@ -56,6 +83,7 @@ function Homepage() {
             placeholder={t("global.landing.searchbar")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={handleEnterKey}
             className="search-input"
           />
           <button onClick={handleSearch} className="search-button">
