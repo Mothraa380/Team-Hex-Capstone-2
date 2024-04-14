@@ -244,6 +244,7 @@ html, body{
   flex-direction: column;
   right: 2%;
   top: 90%;
+  z-index: 0;
 } 
 .dashboard .sidebar .sidebar-top .locationSettings .dropdown-contentB span{
   padding: 10px;
