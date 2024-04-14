@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Loader } from '@googlemaps/js-api-loader';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useParams } from "react-router-dom";
 import { db } from "../../firebase.ts";
-import { doc, getDoc, collection, query, where, getDocs, addDoc } from 'firebase/firestore';
+import { doc, getDoc, collection, getDocs, addDoc } from 'firebase/firestore';
 import "./reviewpage.css";
 
 // Define a custom interface for restroom data
@@ -39,12 +39,12 @@ interface RouteStep {
 function ReviewPage() {
   const navigate = useNavigate();
   const [routeSteps, setRouteSteps] = useState<RouteStep[]>([]);
+  const [totalTime, setTotalTime] = useState("");
+  const [totalDistance, setTotalDistance] = useState("");
   const { id } = useParams();
   const { position } = useParams<{ position: string }>();
   const positionArray = (position ? position.split(',').map(Number) : []) || [];
-  const [getAddress, setAddress] = useState('');
   const [map, setMap] = useState<google.maps.Map | null>(null);
-  //const [restroomData, setRestroomData] = useState(null);
   const [restroomData, setRestroomData] = useState<RestroomData | null>(null);
   const [addingReview, setAddingReview] = useState(false);
   const [newReview, setNewReview] = useState<Review>({
@@ -58,22 +58,18 @@ function ReviewPage() {
   });
   const [reviewsData, setReviewsData] = useState<Review[]>([
   ]);
-  /*useEffect(() => {
-    if (id === "CaCKeanWrTIkBrlBLeuT") {
-      // If the ID matches, add a default review to reviewsData
-      setReviewsData([
-        {
-          reviewerName: "John Doe",
-          cleanliness: 4,
-          amenities: 3,
-          accessibility: 5,
-          description: "Very Clean bathroom!",
-          image: null,
-          date: new Date()
-        }
-      ]);
+
+  const calculateStarColor = (starCount: number): string => {
+    if (starCount === 1 || starCount === 2) {
+      return 'one-star';
+    } else if (starCount === 3) {
+      return 'three-star';
+    } else if (starCount === 4 || starCount === 5) {
+      return 'four-star';
+    } else {
+      return ''; // Default color if count is invalid
     }
-  }, [id]);*/
+  };
 
   const handleAddReview = async () => {
     const updatedReviews = [...reviewsData, { ...newReview }];
@@ -123,8 +119,8 @@ function ReviewPage() {
         if (docSnap.exists()) {
           // If the document exists, set the restroom data state
           const data = docSnap.data();
-          const hold = `${data.street}, ${data.city}, ${data.state}, ${data.country}`;
-          setAddress(hold);
+          //const hold = `${data.street}, ${data.city}, ${data.state}, ${data.country}`;
+          //setAddress(hold);
           setRestroomData({
             name: data.name,
             street: data.street,
@@ -205,6 +201,7 @@ function ReviewPage() {
     loader.load().then(() => {
       const mapElement = document.getElementById('map');
       if(!mapElement || !position) return;
+
       const mapStyles = [
         {
           featureType: 'poi',
@@ -225,20 +222,20 @@ function ReviewPage() {
         
       setMap(makeMap);  //set changes to map
     });
-  }, []);
+  }, [position]);
   
-
+  const [destLat, setDestLat] = useState(null);
+  const [destLng, setDestLng] = useState(null);
   //whenever map changes
   useEffect(() => {
+    
     const fetchData = async () => {
       console.log("POR QUE");
   
       if (!map) return; //if map not loaded
       //display route
-      const directionsService = new google.maps.DirectionsService();
-      const directionsRenderer = new google.maps.DirectionsRenderer();
-      let destLat: number = 33.253946;
-      let destLng: number = -97.136407;
+      //const directionsService = new google.maps.DirectionsService();
+      //const directionsRenderer = new google.maps.DirectionsRenderer();
   
       if (!restroomData) return;
       const address = `${restroomData.street}, ${restroomData.city}, ${restroomData.state}, ${restroomData.country}`;
@@ -255,62 +252,125 @@ function ReviewPage() {
         console.log("Geocoding response:", geoData); // Log the response from geocoding API
         if (geoData.results && geoData.results[0] && geoData.results[0].geometry) {
           const { lat, lng } = geoData.results[0].geometry.location;
-          destLat = lat;
-          destLng = lng;
+          setDestLat(lat);
+          setDestLng(lng);
           console.log("ayo");
         }
       }
   
       console.log('part 2');
-      directionsRenderer.setMap(map);
-      let request;
+      // directionsRenderer.setMap(map);
+      // let request;
   
-      request = {
-        origin: {
-          lat: positionArray[0], lng: positionArray[1]
-        }, // Use user's position as the origin
-        destination: {
-          lat: destLat, lng: destLng
-        },
-        travelMode: google.maps.TravelMode.DRIVING,
-      };
+      // request = {
+      //   origin: {
+      //     lat: positionArray[0], lng: positionArray[1]
+      //   }, // Use user's position as the origin
+      //   destination: {
+      //     lat: destLat, lng: destLng
+      //   },
+      //   travelMode: google.maps.TravelMode.DRIVING,
+      // };
   
-      directionsService.route(request, (result, status) => {
-        if (status === "OK") {
-          directionsRenderer.setDirections(result);
+      // directionsService.route(request, (result, status) => {
+      //   if (status === "OK") {
+      //     directionsRenderer.setDirections(result);
           
-          if (result) {
-            const steps: RouteStep[] = [];
-            const route = result.routes[0];
-            if (route) {
-              const legs = route.legs;
-              legs.forEach((leg, legIndex) => {
-                leg.steps.forEach((step, stepIndex) => {
-                  steps.push({
-                    instruction: step.instructions,
-                    distance: step.distance ? step.distance.text : "Unknown",
-                    duration: step.duration ? step.duration.text : "Unknown",
-                    travelMode: step.travel_mode,
-                  });
-                });
-              });
-            }
-            setRouteSteps(steps);
-          }
-        } else {
-          console.error("Directions request failed due to " + status);
-        }
-      });
+      //     if (result) {
+      //       const steps: RouteStep[] = [];
+      //       const route = result.routes[0];
+      //       if (route) {
+              
+      //         const legs = route.legs;
+      //         const totalDurationText = route.legs[0]?.duration?.text || "";
+      //         setTotalTime(totalDurationText);
+      //         setTotalDistance(route.legs[0]?.distance?.text || "");
+
+      //         // Log or use the total duration as needed
+      //         console.log("Total Time:", totalDurationText);
+      //         legs.forEach((leg, legIndex) => {
+      //           leg.steps.forEach((step, stepIndex) => {
+      //             steps.push({
+      //               instruction: step.instructions,
+      //               distance: step.distance ? step.distance.text : "Unknown",
+      //               duration: step.duration ? step.duration.text : "Unknown",
+      //               travelMode: step.travel_mode,
+      //             });
+      //           });
+      //         });
+      //       }
+      //       setRouteSteps(steps);
+      //     }
+      //   } else {
+      //     console.error("Directions request failed due to " + status);
+      //   }
+      // });
       console.log('rerun');
     };
   
     fetchData(); // Call the async function
-  
     // Return a cleanup function if needed
     return () => {
       // Cleanup code here
     };
-  }, [map, restroomData]); // Dependency array
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [restroomData]); // Dependency array
+
+  useEffect(() => {
+    if (!map || destLat === null || destLng === null) return;
+
+    const directionsService = new google.maps.DirectionsService();
+    const directionsRenderer = new google.maps.DirectionsRenderer();
+    directionsRenderer.setMap(map);
+
+    let request;
+
+    request = {
+      origin: {
+        lat: positionArray[0], lng: positionArray[1]
+      }, // Use user's position as the origin
+      destination: {
+        lat: destLat, lng: destLng
+      },
+      travelMode: google.maps.TravelMode.DRIVING,
+    };
+
+    directionsService.route(request, (result, status) => {
+      if (status === "OK") {
+        directionsRenderer.setDirections(result);
+        
+        if (result) {
+          const steps: RouteStep[] = [];
+          const route = result.routes[0];
+
+          if (route) {
+            const legs = route.legs;
+            const totalDurationText = route.legs[0]?.duration?.text || "";
+            setTotalTime(totalDurationText);
+            setTotalDistance(route.legs[0]?.distance?.text || "");
+
+            // Log or use the total duration as needed
+            console.log("Total Time:", totalDurationText);
+            legs.forEach((leg, legIndex) => {
+              leg.steps.forEach((step, stepIndex) => {
+                steps.push({
+                  instruction: step.instructions,
+                  distance: step.distance ? step.distance.text : "Unknown",
+                  duration: step.duration ? step.duration.text : "Unknown",
+                  travelMode: step.travel_mode,
+                });
+              });
+            });
+          }
+          setRouteSteps(steps);
+        }
+      } else {
+        console.error("Directions request failed due to " + status);
+      }
+      });
+
+       // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [map, destLat, destLng]);
   
   const handleDashboardReturn = () => {
     navigate(`/dashboard?latLng=${position}`);
@@ -318,12 +378,13 @@ function ReviewPage() {
 
   console.log("Reviews data:", );
   return (
+    <div className="page-wrapper">
     <div className="review-page">
-      <div className="header-container">
+    <div className="header-container">
+        <div className="review-header">Restroom's information</div>
         <button className="add-review-btn" onClick={() => setAddingReview(true)}>
           Add Review
         </button>
-        <div className="review-header">Restroom's information</div>
         <button onClick={handleDashboardReturn} className="go-back-btn">Dashboard</button>
       </div>
       <div className="place-details">
@@ -332,23 +393,25 @@ function ReviewPage() {
           <div className="place-name">{restroomData?.name}</div>
           <div className="place-address">Address: {restroomData?.address}</div>
           <div className="place-directions">Building Directions: {restroomData?.direction}</div>
-          <div className="map" id="map"></div>
-          <div className="route-steps-container">
-            {/* <p>Street Directions</p>
-      {routeSteps.map((step, index) => (
+          <div className='map-directions'>
+            <div className="directions">
+              <div style={{fontSize: '30px', padding: '10px', marginBottom: '-20px', borderBottom: '2px solid lightgray'}}>{totalTime}, ({totalDistance})
+              <a href={`https://www.google.com/maps?q=${destLat},${destLng}`} target="_blank" rel="noreferrer" style={{ marginLeft: '20px', textDecoration: 'none', color: 'white', fontSize: '20px', padding: '10px', backgroundColor: 'purple', borderRadius: '20px' }}>Navigate</a>
+              </div>
+            {routeSteps.map((step, index) => (
         <div key={index}>
-          <p className="route-step">Step {index + 1}</p>
-          <p className="route-step">Instructions: <span dangerouslySetInnerHTML={{ __html: step.instruction }} /></p>
-          <p className="route-step">Distance: <span dangerouslySetInnerHTML={{ __html: step.distance }} /></p>
-          <p className="route-step">Duration: <span dangerouslySetInnerHTML={{ __html: step.duration }} /></p>
+          <p className="route-step"><span dangerouslySetInnerHTML={{ __html: step.instruction }}/></p>
+          <p className="route-step" style={{ fontSize: '20px', borderBottom: '2px solid lightgray'}}>&nbsp;&nbsp;&nbsp;<span dangerouslySetInnerHTML={{ __html: step.distance }} /></p>
           <p></p>
         </div>
-      ))} */}
-    </div>
+      ))}
+            </div>
+            <div className="map" id="map"></div>
+          </div>
           </div>
       <div className="place-comments">Comments: {restroomData?.comments}</div>
       <div className="image-container">
-      <img src="Comp/Reviewpage/Handicap_toliet_2.jpg" alt="Place Image" /> 
+      {/* <img src="Comp/Reviewpage/Handicap_toliet_2.jpg" alt="Place Image" />  */}
       </div>
       </div>
       </div>
@@ -403,28 +466,31 @@ function ReviewPage() {
       
       <div className = "reviews-box">
       <div className="reviews-container">
-        {reviewsData.length > 0 ? (
+      {reviewsData.length > 0 ? (
           reviewsData.map((review, index) => (
-            <div key={index} className={`review-rectangle ${calculateOverallQuality(review) <= 2.5 ? 'light-red' : 'light-green'}`}>
-              <div className="reviewer-name">{review.reviewerName}</div>
-              <div className="cleanliness star-rating">{`Cleanliness: ${'★'.repeat(review.cleanliness)}`}</div>
-              <div className="amenities star-rating">{`Amenities: ${'★'.repeat(review.amenities)}`}</div>
-              <div className="accessibility star-rating">{`Accessibility: ${'★'.repeat(review.accessibility)}`}</div>
-              <div className="overall-quality">{`Overall Quality: ${calculateOverallQuality(review).toFixed(2)}/5`}</div>
-              <div className="description">{review.description}</div>
-              <div className="date">Date: {review.date.toLocaleDateString()}</div>
-              {review.image && (
-                <div className="photo">
-                  <img src={URL.createObjectURL(review.image)} alt="Review" />
-                </div>
-              )}
+            <div key={index} className="review">
+            <div className="reviewer-name">Name: {review.reviewerName}</div>
+            <div className="star-ratings">
+            <div>Cleanliness: {[...Array(review.cleanliness)].map((_, i) => <span key={i} className={`star ${calculateStarColor(review.cleanliness)}`}>&#9733;</span>)}</div>
+            <div>Amenities: {[...Array(review.amenities)].map((_, i) => <span key={i} className={`star ${calculateStarColor(review.amenities)}`}>&#9733;</span>)}</div>
+            <div>Accessibility: {[...Array(review.accessibility)].map((_, i) => <span key={i} className={`star ${calculateStarColor(review.accessibility)}`}>&#9733;</span>)}</div>
             </div>
-          ))
+            <div className="overall-quality">{`Overall Quality: ${calculateOverallQuality(review).toFixed(2)}/5`}</div>
+            <div className="description">Reason: {review.description}</div>
+            <div className="date">Date: {review.date.toLocaleDateString()}</div>
+            {review.image && (
+              <div className="photo">
+                <img src={URL.createObjectURL(review.image)} alt="Review" />
+              </div>
+            )}
+          </div>
+        ))
         ) : (
           <div>No reviews available</div>
         )}
       </div>
       </div>
+    </div>
     </div>
   );
 }
