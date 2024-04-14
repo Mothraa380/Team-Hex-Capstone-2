@@ -217,8 +217,6 @@ function ReviewPage() {
         zoom: 17,
         styles: mapStyles
       });    
-      
-      console.log('part 1');
         
       setMap(makeMap);  //set changes to map
     });
@@ -230,17 +228,12 @@ function ReviewPage() {
   useEffect(() => {
     
     const fetchData = async () => {
-      console.log("POR QUE");
   
       if (!map) return; //if map not loaded
       //display route
-      //const directionsService = new google.maps.DirectionsService();
-      //const directionsRenderer = new google.maps.DirectionsRenderer();
   
       if (!restroomData) return;
       const address = `${restroomData.street}, ${restroomData.city}, ${restroomData.state}, ${restroomData.country}`;
-  
-      console.log("Attempting geocoding for address:", address);
   
       // Perform geocoding to convert address to coordinates
       const response = await fetch(
@@ -249,63 +242,13 @@ function ReviewPage() {
   
       if (response.ok) {
         const geoData = await response.json();
-        console.log("Geocoding response:", geoData); // Log the response from geocoding API
+        //console.log("Geocoding response:", geoData); // Log the response from geocoding API
         if (geoData.results && geoData.results[0] && geoData.results[0].geometry) {
           const { lat, lng } = geoData.results[0].geometry.location;
           setDestLat(lat);
           setDestLng(lng);
-          console.log("ayo");
         }
       }
-  
-      console.log('part 2');
-      // directionsRenderer.setMap(map);
-      // let request;
-  
-      // request = {
-      //   origin: {
-      //     lat: positionArray[0], lng: positionArray[1]
-      //   }, // Use user's position as the origin
-      //   destination: {
-      //     lat: destLat, lng: destLng
-      //   },
-      //   travelMode: google.maps.TravelMode.DRIVING,
-      // };
-  
-      // directionsService.route(request, (result, status) => {
-      //   if (status === "OK") {
-      //     directionsRenderer.setDirections(result);
-          
-      //     if (result) {
-      //       const steps: RouteStep[] = [];
-      //       const route = result.routes[0];
-      //       if (route) {
-              
-      //         const legs = route.legs;
-      //         const totalDurationText = route.legs[0]?.duration?.text || "";
-      //         setTotalTime(totalDurationText);
-      //         setTotalDistance(route.legs[0]?.distance?.text || "");
-
-      //         // Log or use the total duration as needed
-      //         console.log("Total Time:", totalDurationText);
-      //         legs.forEach((leg, legIndex) => {
-      //           leg.steps.forEach((step, stepIndex) => {
-      //             steps.push({
-      //               instruction: step.instructions,
-      //               distance: step.distance ? step.distance.text : "Unknown",
-      //               duration: step.duration ? step.duration.text : "Unknown",
-      //               travelMode: step.travel_mode,
-      //             });
-      //           });
-      //         });
-      //       }
-      //       setRouteSteps(steps);
-      //     }
-      //   } else {
-      //     console.error("Directions request failed due to " + status);
-      //   }
-      // });
-      console.log('rerun');
     };
   
     fetchData(); // Call the async function
@@ -350,7 +293,6 @@ function ReviewPage() {
             setTotalDistance(route.legs[0]?.distance?.text || "");
 
             // Log or use the total duration as needed
-            console.log("Total Time:", totalDurationText);
             legs.forEach((leg, legIndex) => {
               leg.steps.forEach((step, stepIndex) => {
                 steps.push({

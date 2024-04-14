@@ -43,7 +43,6 @@ function SearchLocation(){
     {
       if(!wideDisplay){
         setWideDisplay(true);
-        //console.log(wideDisplay, "mommy");
       }
     }
     else
@@ -51,7 +50,6 @@ function SearchLocation(){
       if(wideDisplay)
       {
         setWideDisplay(false);
-        //console.log(wideDisplay, "daddy");
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -76,12 +74,9 @@ function SearchLocation(){
   const navigateToReviewPage = (index : number) =>{
     routeIndex = index;
     const positionString = `${userPosition.lat},${userPosition.lng}`; //user entered lat and lng
-    //console.log("HORSEEEEE", routeIndex);
+
     if(routeIndex || routeIndex === 0)  //if routeindex is not null or is 0
       navigate(`/reviewpage/${nearbyLocations[routeIndex].id}/${positionString}`);  //navigate to reviewpage
-    else
-      {//console.log("PROBLEM", routeIndex);
-      }
   }
 
   //find locations within certain radius and create markers, store data, signal for sidebar to rerender
@@ -92,7 +87,6 @@ function SearchLocation(){
     if(locationMarkers.length !== 0)
     {
       locationMarkers.forEach(marker => {
-      //console.log('delete');
       (marker as google.maps.Marker).setMap(null);
     });
     //Empty the locationMarkers array
@@ -135,13 +129,10 @@ function SearchLocation(){
           color = "green";  //good
         }
         overallRating /= 20;  //convert ratings to out of 5 stars
-
-        ////console.log('MAMA MIA',typeof rating.positive);
   
         // Concatenate street, city, state, and country to form complete address
         const address = `${street}, ${city}, ${state}, ${country}`;
-  
-        //console.log("Attempting geocoding for address:", address);
+
   
         // Perform geocoding to convert address to coordinates
         const response = await fetch(
@@ -168,14 +159,12 @@ function SearchLocation(){
               nearbyLocations.push({ id: doc.id, name, address, distance: distanceInMiles, latS: lat, lngS: lng, rating: overallRating, color});
             }
           } else {
-            //console.error("Invalid location:", address); //print error
+            console.error("Invalid location:", address); //print error
           }
         } else {
-          //console.error("Geocoding request failed");//print error
+          console.error("Geocoding request failed");//print error
         }
       }));
-  
-      //console.log("SPEAK YOUR TRUTH ",sortByRatings);
 
       // Sort nearby locations by distance or rating
       if(sortByRatings)
@@ -237,20 +226,16 @@ function SearchLocation(){
     });
     setDataLoaded(true);  //to initiate sidebar update
 
-    if(dataLoaded){
-      //console.log('yooo whats good');
-    }
+    if(dataLoaded){}
     
     // Log the number of locations found
-    //console.log("Number of nearby restroom locations:", nearbyLocations.length);
   
     } catch (error) {
-      //console.error("Error fetching restroom data:", error);  //print error
+      console.error("Error fetching restroom data:", error);  //print error
     }
   };
 
   useEffect(() => { 
-    //console.log("WE MADE IT");
     //load map
     const loader = new Loader({
       apiKey: 'AIzaSyDLRmzWGSVuOYRHHFJ0vrEApxLuSVVgf1o',
@@ -295,18 +280,13 @@ function SearchLocation(){
             lng: lng()
         });
           //zoom in to users new position
-          //globalLocation = location;
-
-          //console.log("savior sir", globalLocation, location);
         }
       }
 
-      //console.log('hrmmmm', mapElement, inputElement, userPosition);
       if (!mapElement) { //if map isnt loaded or input is empty
         if(!wideDisplay)
         {
           setSidebarUpdate(!sidebarUpdate);
-          //console.log('we made it luv');
         }  
         return;
       }
@@ -319,7 +299,6 @@ function SearchLocation(){
           return;
         }
       }
-      //console.log("LETS GET ITTTTTTT");
 
       //setting map info
       let mapInstance;
@@ -332,53 +311,18 @@ function SearchLocation(){
       
 
       setMap(mapInstance);  //store map info
-      
 
-      // const searchBox = new window.google.maps.places.SearchBox(inputElement);  //suggest locations based on user input
-
-      // searchBox.addListener('places_changed', selectionSearch);  //handle search for whichever location user selects
-
-      // function selectionSearch() { //search based on user selection
-        // const places = searchBox.getPlaces(); 
-
-        // if (!places || places.length === 0) { //if places not loaded or no places shown
-        //   return;
-        // }
-
-        // const place = places[0];  //store place user selected
-        // if (place.geometry && place.geometry.location) {  //check if location is valid
-        //   setOpen(true);  //allow circle radius to appear
-        //   setLocation(place.formatted_address ?? ''); //store the selected location in user input bar
-        //   //store lat and lng of selected place as users location
-        //   const { lat, lng } = place.geometry.location; 
-        //   setUserPosition({
-        //     lat: lat(),
-        //     lng: lng()
-        // });
-        // mapInstance.panTo({
-        //     lat: latitude,
-        //     lng: longitude
-        // }); //zoom in to users new position
-          //globalLocation = location;
-
-          //console.log("savior sir", globalLocation, location);
-        // }
-      // }
     }).catch(error => { //if map failed to load
-      //console.error('Error loading Google Maps API:', error);
+      console.error('Error loading Google Maps API:', error);
     });
-
-    //console.log('AMMMEEERRRIIICAAAA');
         // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userPosition, distance, showMap, wideDisplay]); //depends on if userPosition changes
 
       
   //add markers to map and create circle radius
   useEffect(() => {
-    //console.log("LULU LALA");
     if(!userPosition || !opened) return;
 
-    //console.log("LULU LALA");
     findTheWay(distance, map, userPosition, sortByRatings); 
 
     if (!map) return;  //if map failed to load or user position undefined
@@ -391,8 +335,8 @@ function SearchLocation(){
       map: map,
       title: 'Your Location',
       icon: {
-        url: "/assets/shipMarker.PNG",
-        scaledSize: new google.maps.Size(47, 70)
+        url: "/assets/userMarker.PNG",
+        scaledSize: new google.maps.Size(30, 50)
       },
       animation: google.maps.Animation.DROP
     });
@@ -422,7 +366,6 @@ function SearchLocation(){
     bounds.extend(marker.getPosition()!);
     bounds.union(newCircle.getBounds()!);
     map.fitBounds(bounds); 
-    //console.log('horset p2',locationMarkers.length);
     }
   
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -441,12 +384,7 @@ function SearchLocation(){
           setLocation(globalLocation);
           handleSearch();
         }
-        //console.log(location, globalLocation );
       }
-    else{
-      //console.log("oh woe is me", globalLocation);
-
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -454,10 +392,8 @@ function SearchLocation(){
   //to reset dataloaded to prepare for next sidebar update
   useEffect(() => {
     if (dataLoaded) {
-      //console.log('Data loaded!');
       setDataLoaded(false);
     }
-    //console.log("curious george",location);
 
     if(location.trim() !== '')
       globalLocation = location;
@@ -466,10 +402,7 @@ function SearchLocation(){
 
   //another handle search function using 'enter' and search button
   const handleSearch = async () => {
-    //console.log(location.trim());
-    //console.log(location);
     if (location.trim() !== '' || globalLocation !== '') { //if location input isnt empty
-      //console.log('HEYOOOO TEST');
 
       //request geocode for location
       try {
@@ -494,15 +427,14 @@ function SearchLocation(){
             const { lat, lng } = data.results[0].geometry.location;
             setOpen(true);
             setUserPosition({ lat, lng });
-            //console.log("User position updated successfully!");
           } else {
             //console.log(data);
           }
         } else {  //if no response
-          //console.error("Geocoding request failed");
+          console.error("Geocoding request failed");
         }
       } catch (error) { //if error in connecting to googleapis
-        //console.error("Error during geocoding:", error);
+        console.error("Error during geocoding:", error);
       }
     }
   };
@@ -521,14 +453,14 @@ function SearchLocation(){
            // //console.log("User position updated successfully:", newPosition);
           },
           (error) => {
-            //console.error('Error getting user location:', error);
+            console.error('Error getting user location:', error);
           }
         );
       } else {
-        //console.error('Geolocation is not supported by this browser.');
+        console.error('Geolocation is not supported by this browser.');
       }
     } catch (error) {
-      //console.error('Error getting user location:', error);
+      console.error('Error getting user location:', error);
     }
   };
 
@@ -542,12 +474,10 @@ function SearchLocation(){
 
   const handleSortByRatingsChange = async () =>{
     setSortByRatings(!sortByRatings);
-     //console.log("THE TRUUUTHHH",sortByRatings);
   };
 
   const toggleMap = () => {
     setShowMap(!showMap);
-    //console.log(showMap);
   };
 
   const {t} = useTranslation();
@@ -555,8 +485,6 @@ function SearchLocation(){
   function SavedSales({ update }) {
     const [dropdownOpenB, setdropdownOpenB] = useState(false);
     const {t} = useTranslation();
-    //console.log("DISTANCE.",globalDistance);
-    //console.log("radishes");
   
     //toggle radius distance dropdown
     const handleDistanceDropdown = () => {
@@ -570,7 +498,6 @@ function SearchLocation(){
           img.style.transform = 'none'; // Reset rotation to its original position
         }
       }     
-      //console.log('wassuuuppp guurll');
     };
 
     
@@ -590,10 +517,8 @@ function SearchLocation(){
         };
 
         (locationMarkers[index] as google.maps.Marker).setIcon(newIcon);
-        //console.log("yooooooo", index);
         (locationMarkers[index] as google.maps.Marker).setAnimation(google.maps.Animation.BOUNCE);
         (locationMarkers[index] as google.maps.Marker).setZIndex(google.maps.Marker.MAX_ZINDEX + 1);
-        //console.log("arr length", locationMarkers.length);
       }
     };
     
@@ -801,8 +726,6 @@ function Dashboard(){
   
   useEffect(() => {
     nearbyLocations = [];
-    //console.log("jorge", globalLocation);
-    
   }, []);
    const {t} = useTranslation();
     return(
