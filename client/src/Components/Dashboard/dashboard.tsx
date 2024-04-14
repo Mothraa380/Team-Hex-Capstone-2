@@ -560,9 +560,20 @@ function SearchLocation(){
   
     //toggle radius distance dropdown
     const handleDistanceDropdown = () => {
-      setdropdownOpenB(!dropdownOpenB); 
+      const img = document.querySelector('.open-dropdown') as HTMLImageElement;
+      setdropdownOpenB(!dropdownOpenB);    
+      if (img) {
+        // Toggle the rotation by checking if the current rotation is 0 degrees
+        if (img.style.transform === '' || img.style.transform === 'none') {
+          img.style.transform = 'rotate(180deg)';
+        } else {
+          img.style.transform = 'none'; // Reset rotation to its original position
+        }
+      }     
       //console.log('wassuuuppp guurll');
     };
+
+    
     //update radius distance
     const handleDistanceChange = (newDistance) =>{
       setDistance(newDistance);
