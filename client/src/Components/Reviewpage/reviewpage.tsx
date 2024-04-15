@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { useParams } from "react-router-dom";
 import { db } from "../../firebase.ts";
 import { doc, getDoc, collection, getDocs, addDoc } from 'firebase/firestore';
+import { useTranslation } from 'react-i18next';
+import { useTextSize } from '../../TextSizeContext.js';
 import "./reviewpage.css";
 
 // Define a custom interface for restroom data
@@ -217,8 +219,6 @@ function ReviewPage() {
         zoom: 17,
         styles: mapStyles
       });    
-      
-      console.log('part 1');
         
       setMap(makeMap);  //set changes to map
     });
@@ -230,17 +230,12 @@ function ReviewPage() {
   useEffect(() => {
     
     const fetchData = async () => {
-      console.log("POR QUE");
   
       if (!map) return; //if map not loaded
       //display route
-      //const directionsService = new google.maps.DirectionsService();
-      //const directionsRenderer = new google.maps.DirectionsRenderer();
   
       if (!restroomData) return;
       const address = `${restroomData.street}, ${restroomData.city}, ${restroomData.state}, ${restroomData.country}`;
-  
-      console.log("Attempting geocoding for address:", address);
   
       // Perform geocoding to convert address to coordinates
       const response = await fetch(
@@ -249,63 +244,13 @@ function ReviewPage() {
   
       if (response.ok) {
         const geoData = await response.json();
-        console.log("Geocoding response:", geoData); // Log the response from geocoding API
+        //console.log("Geocoding response:", geoData); // Log the response from geocoding API
         if (geoData.results && geoData.results[0] && geoData.results[0].geometry) {
           const { lat, lng } = geoData.results[0].geometry.location;
           setDestLat(lat);
           setDestLng(lng);
-          console.log("ayo");
         }
       }
-  
-      console.log('part 2');
-      // directionsRenderer.setMap(map);
-      // let request;
-  
-      // request = {
-      //   origin: {
-      //     lat: positionArray[0], lng: positionArray[1]
-      //   }, // Use user's position as the origin
-      //   destination: {
-      //     lat: destLat, lng: destLng
-      //   },
-      //   travelMode: google.maps.TravelMode.DRIVING,
-      // };
-  
-      // directionsService.route(request, (result, status) => {
-      //   if (status === "OK") {
-      //     directionsRenderer.setDirections(result);
-          
-      //     if (result) {
-      //       const steps: RouteStep[] = [];
-      //       const route = result.routes[0];
-      //       if (route) {
-              
-      //         const legs = route.legs;
-      //         const totalDurationText = route.legs[0]?.duration?.text || "";
-      //         setTotalTime(totalDurationText);
-      //         setTotalDistance(route.legs[0]?.distance?.text || "");
-
-      //         // Log or use the total duration as needed
-      //         console.log("Total Time:", totalDurationText);
-      //         legs.forEach((leg, legIndex) => {
-      //           leg.steps.forEach((step, stepIndex) => {
-      //             steps.push({
-      //               instruction: step.instructions,
-      //               distance: step.distance ? step.distance.text : "Unknown",
-      //               duration: step.duration ? step.duration.text : "Unknown",
-      //               travelMode: step.travel_mode,
-      //             });
-      //           });
-      //         });
-      //       }
-      //       setRouteSteps(steps);
-      //     }
-      //   } else {
-      //     console.error("Directions request failed due to " + status);
-      //   }
-      // });
-      console.log('rerun');
     };
   
     fetchData(); // Call the async function
@@ -350,7 +295,6 @@ function ReviewPage() {
             setTotalDistance(route.legs[0]?.distance?.text || "");
 
             // Log or use the total duration as needed
-            console.log("Total Time:", totalDurationText);
             legs.forEach((leg, legIndex) => {
               leg.steps.forEach((step, stepIndex) => {
                 steps.push({
@@ -377,31 +321,34 @@ function ReviewPage() {
   };
 
   console.log("Reviews data:", );
+
+  const {t} = useTranslation();
+  const { scaleFactor } = useTextSize();
   return (
     <div className="page-wrapper">
     <div className="review-page">
     <div className="header-container">
-        <div className="review-header">Restroom's information</div>
-        <button className="add-review-btn" onClick={() => setAddingReview(true)}>
-          Add Review
+        <div style={{ fontSize: `${24 * scaleFactor}px` }} className="review-header">{t("global.reviews.title")}</div>
+        <button style={{ fontSize: `${13 * scaleFactor}px` }} className="add-review-btn" onClick={() => setAddingReview(true)}>
+        {t("global.reviews.addreview")}
         </button>
-        <button onClick={handleDashboardReturn} className="go-back-btn">Dashboard</button>
+        <button style={{ fontSize: `${13 * scaleFactor}px` }} onClick={handleDashboardReturn} className="go-back-btn">{t("global.reviews.dashboard")}</button>
       </div>
       <div className="place-details">
         <div className="place-info-container">
           <div className="place-info">
-          <div className="place-name">{restroomData?.name}</div>
-          <div className="place-address">Address: {restroomData?.address}</div>
-          <div className="place-directions">Building Directions: {restroomData?.direction}</div>
+          <div style={{ fontSize: `${24 * scaleFactor}px` }} className="place-name">{restroomData?.name}</div>
+          <div style={{ fontSize: `${18 * scaleFactor}px` }} className="place-address">{t("global.reviews.address")} {restroomData?.address}</div>
+          <div style={{ fontSize: `${18 * scaleFactor}px` }} className="place-directions">{t("global.reviews.directions")} {restroomData?.direction}</div>
           <div className='map-directions'>
             <div className="directions">
-              <div style={{fontSize: '30px', padding: '10px', marginBottom: '-20px', borderBottom: '2px solid lightgray'}}>{totalTime}, ({totalDistance})
-              <a href={`https://www.google.com/maps?q=${destLat},${destLng}`} target="_blank" rel="noreferrer" style={{ marginLeft: '20px', textDecoration: 'none', color: 'white', fontSize: '20px', padding: '10px', backgroundColor: 'purple', borderRadius: '20px' }}>Navigate</a>
+              <div style={{fontSize: `${30 * scaleFactor}px`, padding: '10px', marginBottom: '-20px', borderBottom: '2px solid lightgray'}}>{totalTime}, ({totalDistance})
+              <a href={`https://www.google.com/maps?q=${destLat},${destLng}`} target="_blank" rel="noreferrer" style={{ marginLeft: '20px', textDecoration: 'none', color: 'white', fontSize: '20px', padding: '10px', backgroundColor: 'purple', borderRadius: '20px' }}>{t("global.reviews.navigate")}</a>
               </div>
             {routeSteps.map((step, index) => (
         <div key={index}>
-          <p className="route-step"><span dangerouslySetInnerHTML={{ __html: step.instruction }}/></p>
-          <p className="route-step" style={{ fontSize: '20px', borderBottom: '2px solid lightgray'}}>&nbsp;&nbsp;&nbsp;<span dangerouslySetInnerHTML={{ __html: step.distance }} /></p>
+          <p style={{ fontSize: `${24 * scaleFactor}px` }} className="route-step"><span dangerouslySetInnerHTML={{ __html: step.instruction }}/></p>
+          <p className="route-step" style={{ fontSize: `${20 * scaleFactor}px`, borderBottom: '2px solid lightgray'}}>&nbsp;&nbsp;&nbsp;<span dangerouslySetInnerHTML={{ __html: step.distance }} /></p>
           <p></p>
         </div>
       ))}
@@ -409,22 +356,22 @@ function ReviewPage() {
             <div className="map" id="map"></div>
           </div>
           </div>
-      <div className="place-comments">Comments: {restroomData?.comments}</div>
+      <div style={{ fontSize: `${18 * scaleFactor}px` }} className="place-comments">{t("global.reviews.comments")} {restroomData?.comments}</div>
       <div className="image-container">
       {/* <img src="Comp/Reviewpage/Handicap_toliet_2.jpg" alt="Place Image" />  */}
       </div>
       </div>
       </div>
-      <div className="review-bar">Review</div>
+      <div style={{ fontSize: `${24 * scaleFactor}px` }} className="review-bar">{t("global.reviews.reviewtitle")}</div>
       {addingReview && (
         <div className="add-review-dropdown">
-          <label>Name:</label>
+          <label style={{ fontSize: `${16 * scaleFactor}px` }}>{t("global.addreviews.name")}</label>
           <input
             type="text"
             value={newReview.reviewerName}
             onChange={(e) => setNewReview({ ...newReview, reviewerName: e.target.value })}
           />
-          <label>Cleanliness:</label>
+          <label style={{ fontSize: `${16 * scaleFactor}px` }}>{t("global.addreviews.cleanliness")}</label>
           <input
             type="range"
             min={0}
@@ -432,7 +379,7 @@ function ReviewPage() {
             value={newReview.cleanliness}
             onChange={(e) => setNewReview({ ...newReview, cleanliness: parseFloat(e.target.value) })}
           />
-          <label>Amenities:</label>
+          <label style={{ fontSize: `${16 * scaleFactor}px` }}>{t("global.addreviews.amenities")}</label>
           <input
             type="range"
             min={0}
@@ -440,7 +387,7 @@ function ReviewPage() {
             value={newReview.amenities}
             onChange={(e) => setNewReview({ ...newReview, amenities: parseFloat(e.target.value) })}
           />
-          <label>Accessibility:</label>
+          <label style={{ fontSize: `${16 * scaleFactor}px` }}>{t("global.addreviews.accessibility")}</label>
           <input
             type="range"
             min={0}
@@ -448,19 +395,20 @@ function ReviewPage() {
             value={newReview.accessibility}
             onChange={(e) => setNewReview({ ...newReview, accessibility: parseFloat(e.target.value) })}
           />
-          <label>Description:</label>
+          <label style={{ fontSize: `${16 * scaleFactor}px` }}>{t("global.addreviews.description")}</label>
           <input
+            style={{ fontSize: `${16 * scaleFactor}px` }}
             type="text"
             value={newReview.description}
             onChange={(e) => setNewReview({ ...newReview, description: e.target.value })}
           />
-          <label>Image:</label>
+          <label style={{ fontSize: `${16 * scaleFactor}px` }}>{t("global.addreviews.image")}</label>
           <input
             type="file"
             accept="image/*"
             onChange={(e) => setNewReview({ ...newReview, image: e.target.files ? e.target.files[0] : null })}
           />
-          <button onClick={handleAddReview}>Add</button>
+          <button style={{ fontSize: `${14 * scaleFactor}px` }} onClick={handleAddReview}>{t("global.addreviews.add")}</button>
         </div>
       )}
       
@@ -469,15 +417,15 @@ function ReviewPage() {
       {reviewsData.length > 0 ? (
           reviewsData.map((review, index) => (
             <div key={index} className="review">
-            <div className="reviewer-name">Name: {review.reviewerName}</div>
+            <div style={{ fontSize: `${16 * scaleFactor}px` }} className="reviewer-name">{t("global.addreviews.name")} {review.reviewerName}</div>
             <div className="star-ratings">
-            <div>Cleanliness: {[...Array(review.cleanliness)].map((_, i) => <span key={i} className={`star ${calculateStarColor(review.cleanliness)}`}>&#9733;</span>)}</div>
-            <div>Amenities: {[...Array(review.amenities)].map((_, i) => <span key={i} className={`star ${calculateStarColor(review.amenities)}`}>&#9733;</span>)}</div>
-            <div>Accessibility: {[...Array(review.accessibility)].map((_, i) => <span key={i} className={`star ${calculateStarColor(review.accessibility)}`}>&#9733;</span>)}</div>
+            <div style={{ fontSize: `${16 * scaleFactor}px` }} >{t("global.addreviews.cleanliness")} {[...Array(review.cleanliness)].map((_, i) => <span key={i} className={`star ${calculateStarColor(review.cleanliness)}`}>&#9733;</span>)}</div>
+            <div style={{ fontSize: `${16 * scaleFactor}px` }} >{t("global.addreviews.amenities")} {[...Array(review.amenities)].map((_, i) => <span key={i} className={`star ${calculateStarColor(review.amenities)}`}>&#9733;</span>)}</div>
+            <div style={{ fontSize: `${16 * scaleFactor}px` }} >{t("global.addreviews.accessibility")} {[...Array(review.accessibility)].map((_, i) => <span key={i} className={`star ${calculateStarColor(review.accessibility)}`}>&#9733;</span>)}</div>
             </div>
-            <div className="overall-quality">{`Overall Quality: ${calculateOverallQuality(review).toFixed(2)}/5`}</div>
-            <div className="description">Reason: {review.description}</div>
-            <div className="date">Date: {review.date.toLocaleDateString()}</div>
+            <div style={{ fontSize: `${18 * scaleFactor}px` }} className="overall-quality">{t("global.reviews.quality")} {`${calculateOverallQuality(review).toFixed(2)}/5`}</div>
+            <div style={{ fontSize: `${16 * scaleFactor}px` }} className="description">{t("global.addreviews.description")} {review.description}</div>
+            <div style={{ fontSize: `${16 * scaleFactor}px` }} className="date">{t("global.reviews.date")} {review.date.toLocaleDateString()}</div>
             {review.image && (
               <div className="photo">
                 <img src={URL.createObjectURL(review.image)} alt="Review" />
@@ -486,7 +434,7 @@ function ReviewPage() {
           </div>
         ))
         ) : (
-          <div>No reviews available</div>
+          <div style={{ fontSize: `${16 * scaleFactor}px` }}>{t("global.reviews.noneavail")}</div>
         )}
       </div>
       </div>
