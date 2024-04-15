@@ -11,7 +11,7 @@ import { useTextSize } from '../../TextSizeContext.js';
 function Homepage() {
   let navigate = useNavigate();
   const { t } = useTranslation();
-  const { scaleFactor } = useTextSize();
+  //const { scaleFactor } = useTextSize();
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearch = () => {
