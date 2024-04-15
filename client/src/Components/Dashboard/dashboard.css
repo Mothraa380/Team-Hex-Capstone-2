@@ -50,7 +50,7 @@ html, body{
     width:500px;
   }
   .dashboard .content .name {
-    font-size: 35px; 
+    font-size: 35px !important; 
     margin-right: 40px;
     text-align: center;
   }
@@ -87,13 +87,21 @@ html, body{
   background-color:  rgb(89, 47, 6);
 }
 .dashboard .profile button {
-  background-color: rgb(58, 185, 235);
   text-align: center;
   padding: 4px 5px;
   border: none;
-  border-radius: 10px;
   cursor: pointer;
+  display: block;
+  width: 100%;
 }
+
+.dashboard .profile .language-btn {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
 .dashboard .profile button:hover{
   background-color:  #ddd;
 }
@@ -107,13 +115,25 @@ html, body{
   overflow: auto;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
-  z-index: 2;
+  z-index: 50;
 }
+
+.dropdown-content {
+  position: absolute;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 8px;
+  z-index: 1;
+}
+
 .dashboard .dropdown-content a {
   color: black;
   padding: 12px 16px;
   text-decoration: none;
   display: block;
+  z-index: 50;
 }
 .dashboard .dropdown-content a:hover {
   background-color: #ddd;
@@ -123,6 +143,7 @@ html, body{
 }
 .dashboard .lower-content .saved .sidebar-container .sidebar .locationSettings .dropdown-contentB.flex {
   display: flex;
+  z-index: 50;
 }
 .dashboard .lower-content .saved .sidebar-container .sidebar .locationSettings .dropdown-contentB.hidden {
   display: none; /* Display the dropdown content when the "show" class is added */
@@ -245,10 +266,11 @@ html, body{
   flex-direction: column;
   right: 2%;
   top: 90%;
-  z-index: 0;
+  z-index: 50;
 } 
 .dashboard .sidebar .sidebar-top .locationSettings .dropdown-contentB span{
   padding: 10px;
+  z-index: 50;
 }
 .dashboard .sidebar .sidebar-top .locationSettings .dropdown-contentB span:hover{
   cursor: pointer;
@@ -320,10 +342,10 @@ html, body{
 .dashboard .lower-content .input-container .searchButton{
   padding: 10px;
   margin-top: 8px;
-  margin-bottom: -7px;
+  margin-bottom: 0px;
   margin-right: 20px;
   margin-left: -30px;
-  height: 42px;
+  height: auto;
   background: rgb(72, 72, 185);
   color: white;
   font-size: 17px;
@@ -440,7 +462,7 @@ ul {
 .dashboard .sidebar-container .sidebar .sidebar-top{
   position: sticky;
   top: 77px;
-  z-index: 1;
+  z-index: 49;
 }
 .dashboard .sidebar .sidebar-top .name button {
   background-color: rgb(72, 72, 185);
@@ -492,7 +514,7 @@ ul {
     min-width: none;
     height: 400px;
     width: 99%;
-    z-index: 1;
+    z-index: 4;
   }
   .dashboard .lower-content{
     min-width: 100px;
@@ -558,7 +580,7 @@ ul {
     border-radius: 5px;
     position: sticky;
     top:0px;
-    margin-left: -3px;
+    margin-left: -4px;
     width: 100%;
     padding-left: 0;
     padding-right: 0;
@@ -574,6 +596,7 @@ ul {
   .dashboard .sidebar .sidebar-top .locationSettings .dropdown-contentB{
     right: 1.4%;
     top: 90%;
+    z-index: 1;
   } 
   .dashboard{
     min-width: 100px;
@@ -596,3 +619,75 @@ ul {
     margin-right: 0px;
   }
 }
+
+.size-mod {
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(206, 196, 196, 0.664);
+}
+
+.btn-size {
+  background-color: #fff;
+  color: black;
+  border: 1px solid #dfe1e5;
+  padding: 8px 12px;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.btn-size:hover {
+  background-color: #f0f0f0;
+}
+
+.size-display {
+  margin: 0 10px;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.size-label {
+  font-size: 12px;
+  color: black;
+  text-align: center;
+}
+
+.size-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.btn-container {
+  position: relative;
+  top: 100%;
+  left: 0;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  /*position: absolute;*/
+  right: 0%;
+  background-color: white;
+  min-width: 100px;
+  overflow: auto;
+  z-index: 2;
+  border: 1px solid rgba(206, 196, 196, 0.664);
+}
+
+.lang-btn {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 8px;
+  background-color: transparent;
+  border: 2px solid rgba(206, 196, 196, 0.664);
+  cursor: pointer;
+  font-size: 16px; /* Adjust font size as needed */
+  color: #333;
+  text-align: center;
+  margin-top: 8px;
+  align-items: center;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+

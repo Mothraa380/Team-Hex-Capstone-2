@@ -4,9 +4,10 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import "./dashboard.css"; 
 import { useTranslation } from 'react-i18next';
 import LanguageSelector from '../../Translations/language-selector';
+import { useTextSize } from '../../TextSizeContext.js';
 
 import { db } from "../../firebase.ts";
-import {collection, getDocs, } from 'firebase/firestore'
+import {collection, getDocs, } from 'firebase/firestore';
 
 //store all essential info for nearby locations
 let nearbyLocations=[] as {id : string, name: string, address: string, distance: number, latS: number, lngS: number, rating: number, color: string}[];
@@ -43,7 +44,6 @@ function SearchLocation(){
     {
       if(!wideDisplay){
         setWideDisplay(true);
-        //console.log(wideDisplay, "mommy");
       }
     }
     else
@@ -51,7 +51,6 @@ function SearchLocation(){
       if(wideDisplay)
       {
         setWideDisplay(false);
-        //console.log(wideDisplay, "daddy");
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -76,12 +75,9 @@ function SearchLocation(){
   const navigateToReviewPage = (index : number) =>{
     routeIndex = index;
     const positionString = `${userPosition.lat},${userPosition.lng}`; //user entered lat and lng
-    //console.log("HORSEEEEE", routeIndex);
+
     if(routeIndex || routeIndex === 0)  //if routeindex is not null or is 0
       navigate(`/reviewpage/${nearbyLocations[routeIndex].id}/${positionString}`);  //navigate to reviewpage
-    else
-      {//console.log("PROBLEM", routeIndex);
-      }
   }
 
   //find locations within certain radius and create markers, store data, signal for sidebar to rerender
@@ -92,7 +88,6 @@ function SearchLocation(){
     if(locationMarkers.length !== 0)
     {
       locationMarkers.forEach(marker => {
-      //console.log('delete');
       (marker as google.maps.Marker).setMap(null);
     });
     //Empty the locationMarkers array
@@ -135,13 +130,10 @@ function SearchLocation(){
           color = "green";  //good
         }
         overallRating /= 20;  //convert ratings to out of 5 stars
-
-        ////console.log('MAMA MIA',typeof rating.positive);
   
         // Concatenate street, city, state, and country to form complete address
         const address = `${street}, ${city}, ${state}, ${country}`;
-  
-        //console.log("Attempting geocoding for address:", address);
+
   
         // Perform geocoding to convert address to coordinates
         const response = await fetch(
@@ -168,14 +160,12 @@ function SearchLocation(){
               nearbyLocations.push({ id: doc.id, name, address, distance: distanceInMiles, latS: lat, lngS: lng, rating: overallRating, color});
             }
           } else {
-            //console.error("Invalid location:", address); //print error
+            console.error("Invalid location:", address); //print error
           }
         } else {
-          //console.error("Geocoding request failed");//print error
+          console.error("Geocoding request failed");//print error
         }
       }));
-  
-      //console.log("SPEAK YOUR TRUTH ",sortByRatings);
 
       // Sort nearby locations by distance or rating
       if(sortByRatings)
@@ -238,19 +228,17 @@ function SearchLocation(){
     setDataLoaded(true);  //to initiate sidebar update
 
     if(dataLoaded){
-      //console.log('yooo whats good');
+      console.log("data loaded");
     }
     
     // Log the number of locations found
-    //console.log("Number of nearby restroom locations:", nearbyLocations.length);
   
     } catch (error) {
-      //console.error("Error fetching restroom data:", error);  //print error
+      console.error("Error fetching restroom data:", error);  //print error
     }
   };
 
   useEffect(() => { 
-    //console.log("WE MADE IT");
     //load map
     const loader = new Loader({
       apiKey: 'AIzaSyDLRmzWGSVuOYRHHFJ0vrEApxLuSVVgf1o',
@@ -295,18 +283,13 @@ function SearchLocation(){
             lng: lng()
         });
           //zoom in to users new position
-          //globalLocation = location;
-
-          //console.log("savior sir", globalLocation, location);
         }
       }
 
-      //console.log('hrmmmm', mapElement, inputElement, userPosition);
       if (!mapElement) { //if map isnt loaded or input is empty
         if(!wideDisplay)
         {
           setSidebarUpdate(!sidebarUpdate);
-          //console.log('we made it luv');
         }  
         return;
       }
@@ -319,7 +302,6 @@ function SearchLocation(){
           return;
         }
       }
-      //console.log("LETS GET ITTTTTTT");
 
       //setting map info
       let mapInstance;
@@ -332,53 +314,18 @@ function SearchLocation(){
       
 
       setMap(mapInstance);  //store map info
-      
 
-      // const searchBox = new window.google.maps.places.SearchBox(inputElement);  //suggest locations based on user input
-
-      // searchBox.addListener('places_changed', selectionSearch);  //handle search for whichever location user selects
-
-      // function selectionSearch() { //search based on user selection
-        // const places = searchBox.getPlaces(); 
-
-        // if (!places || places.length === 0) { //if places not loaded or no places shown
-        //   return;
-        // }
-
-        // const place = places[0];  //store place user selected
-        // if (place.geometry && place.geometry.location) {  //check if location is valid
-        //   setOpen(true);  //allow circle radius to appear
-        //   setLocation(place.formatted_address ?? ''); //store the selected location in user input bar
-        //   //store lat and lng of selected place as users location
-        //   const { lat, lng } = place.geometry.location; 
-        //   setUserPosition({
-        //     lat: lat(),
-        //     lng: lng()
-        // });
-        // mapInstance.panTo({
-        //     lat: latitude,
-        //     lng: longitude
-        // }); //zoom in to users new position
-          //globalLocation = location;
-
-          //console.log("savior sir", globalLocation, location);
-        // }
-      // }
     }).catch(error => { //if map failed to load
-      //console.error('Error loading Google Maps API:', error);
+      console.error('Error loading Google Maps API:', error);
     });
-
-    //console.log('AMMMEEERRRIIICAAAA');
         // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userPosition, distance, showMap, wideDisplay]); //depends on if userPosition changes
 
       
   //add markers to map and create circle radius
   useEffect(() => {
-    //console.log("LULU LALA");
     if(!userPosition || !opened) return;
 
-    //console.log("LULU LALA");
     findTheWay(distance, map, userPosition, sortByRatings); 
 
     if (!map) return;  //if map failed to load or user position undefined
@@ -391,8 +338,8 @@ function SearchLocation(){
       map: map,
       title: 'Your Location',
       icon: {
-        url: "/assets/shipMarker.PNG",
-        scaledSize: new google.maps.Size(47, 70)
+        url: "/assets/userMarker.PNG",
+        scaledSize: new google.maps.Size(30, 50)
       },
       animation: google.maps.Animation.DROP
     });
@@ -422,7 +369,6 @@ function SearchLocation(){
     bounds.extend(marker.getPosition()!);
     bounds.union(newCircle.getBounds()!);
     map.fitBounds(bounds); 
-    //console.log('horset p2',locationMarkers.length);
     }
   
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -441,12 +387,7 @@ function SearchLocation(){
           setLocation(globalLocation);
           handleSearch();
         }
-        //console.log(location, globalLocation );
       }
-    else{
-      //console.log("oh woe is me", globalLocation);
-
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -454,10 +395,8 @@ function SearchLocation(){
   //to reset dataloaded to prepare for next sidebar update
   useEffect(() => {
     if (dataLoaded) {
-      //console.log('Data loaded!');
       setDataLoaded(false);
     }
-    //console.log("curious george",location);
 
     if(location.trim() !== '')
       globalLocation = location;
@@ -466,10 +405,7 @@ function SearchLocation(){
 
   //another handle search function using 'enter' and search button
   const handleSearch = async () => {
-    //console.log(location.trim());
-    //console.log(location);
     if (location.trim() !== '' || globalLocation !== '') { //if location input isnt empty
-      //console.log('HEYOOOO TEST');
 
       //request geocode for location
       try {
@@ -494,15 +430,14 @@ function SearchLocation(){
             const { lat, lng } = data.results[0].geometry.location;
             setOpen(true);
             setUserPosition({ lat, lng });
-            //console.log("User position updated successfully!");
           } else {
             //console.log(data);
           }
         } else {  //if no response
-          //console.error("Geocoding request failed");
+          console.error("Geocoding request failed");
         }
       } catch (error) { //if error in connecting to googleapis
-        //console.error("Error during geocoding:", error);
+        console.error("Error during geocoding:", error);
       }
     }
   };
@@ -521,33 +456,32 @@ function SearchLocation(){
            // //console.log("User position updated successfully:", newPosition);
           },
           (error) => {
-            //console.error('Error getting user location:', error);
+            console.error('Error getting user location:', error);
           }
         );
       } else {
-        //console.error('Geolocation is not supported by this browser.');
+        console.error('Geolocation is not supported by this browser.');
       }
     } catch (error) {
-      //console.error('Error getting user location:', error);
+      console.error('Error getting user location:', error);
     }
   };
 
   useEffect(() => {
     const searchParams = new URLSearchParams(currentLocation.search);
     if (searchParams.get('useLocation') === 'true') {
-     handleCurrentLocation();
+      setLocation('Your Location');
+      handleCurrentLocation();
     }
    // Removed extraneous closing brace and corrected dependency array
    }, [currentLocation.search]);
 
   const handleSortByRatingsChange = async () =>{
     setSortByRatings(!sortByRatings);
-     //console.log("THE TRUUUTHHH",sortByRatings);
   };
 
   const toggleMap = () => {
     setShowMap(!showMap);
-    //console.log(showMap);
   };
 
   const {t} = useTranslation();
@@ -555,8 +489,6 @@ function SearchLocation(){
   function SavedSales({ update }) {
     const [dropdownOpenB, setdropdownOpenB] = useState(false);
     const {t} = useTranslation();
-    //console.log("DISTANCE.",globalDistance);
-    //console.log("radishes");
   
     //toggle radius distance dropdown
     const handleDistanceDropdown = () => {
@@ -570,7 +502,6 @@ function SearchLocation(){
           img.style.transform = 'none'; // Reset rotation to its original position
         }
       }     
-      //console.log('wassuuuppp guurll');
     };
 
     
@@ -590,10 +521,8 @@ function SearchLocation(){
         };
 
         (locationMarkers[index] as google.maps.Marker).setIcon(newIcon);
-        //console.log("yooooooo", index);
         (locationMarkers[index] as google.maps.Marker).setAnimation(google.maps.Animation.BOUNCE);
         (locationMarkers[index] as google.maps.Marker).setZIndex(google.maps.Marker.MAX_ZINDEX + 1);
-        //console.log("arr length", locationMarkers.length);
       }
     };
     
@@ -620,51 +549,58 @@ function SearchLocation(){
 
     return (
       <div className="saved">
-        <div className="sidebar-container">
+        <div className="sidebar-container" style={!wideDisplay ? { top: `${18 * scaleFactor}px`, height: `calc(78vh * ${scaleFactor})` } : {}}>
           <div className={`sidebar ${modifyDisplay}`}>
             <div className="sidebar-top">
-              <div className="name">
+              <div style={{ fontSize: `${30 * scaleFactor}px` }} className="name">
               {t("global.dashboard.title")}
                 <div className="buttons">
-                  <button className="viewMapButton" style={{ marginRight: '0px'}} onClick={toggleMap}>
+                  <button className="viewMapButton" style={{ marginRight: '0px', fontSize: `${14 * scaleFactor}px`}} onClick={toggleMap}>
                   {showMap ? 'Close map' : 'View map'}
                 </button>
-                <button className="add-button"><Link to="/add-restroom" style={{ textDecoration: 'none', color: 'inherit'}}>{t("global.dashboard.addPost")}</Link></button>
+                <button style={{ fontSize: `${14 * scaleFactor}px` }} className="add-button"><Link to="/add-restroom" style={{ textDecoration: 'none', color: 'inherit'}}>{t("global.dashboard.addPost")}</Link></button>
               </div>
               </div>
               <div className="locationSettings">
                 <div className="checkboxAndDistance">
                   <input type="checkbox" id="sort-by-ratings" checked={sortByRatings} onChange={handleSortByRatingsChange} />
-                  <label htmlFor="sort-by-ratings">Sort by ratings</label>
+                  <label style={{ fontSize: `${16 * scaleFactor}px` }} htmlFor="sort-by-ratings">{t("global.dashboard.sortby")}</label>
                   <button className="setDistance" onClick={handleDistanceDropdown}>
-                      <span>Within {distance} miles </span>
+                  <span style={{ fontSize: `${20 * scaleFactor}px` }} >{t("global.dashboard.within")} </span><span style={{ fontSize: `${20 * scaleFactor}px` }}>{distance}</span><span style={{ fontSize: `${20 * scaleFactor}px` }}> {t("global.dashboard.distancemetric")} </span>
                       <img src="https://static.thenounproject.com/png/551749-200.png" className="open-dropdown" alt="" />
                   </button>
                 </div>
                 <div className={`dropdown-contentB ${dropdownOpenB ? 'flex' : 'hidden'}`}>
-                  <span onClick={()=>handleDistanceChange(0.5)}>Within 0.5 miles</span>
-                  <span onClick={()=>handleDistanceChange(1.0)}>Within 1.0 miles</span>
-                  <span onClick={()=>handleDistanceChange(2.0)}>Within 2.0 miles</span>
-                  <span onClick={()=>handleDistanceChange(5.0)}>Within 5.0 miles</span>
-                  <span onClick={()=>handleDistanceChange(10.0)}>Within 10.0 miles</span>
-                  <span onClick={()=>handleDistanceChange(15.0)}>Within 15.0 miles</span>
+                <span style={{ fontSize: `${16 * scaleFactor}px` }} onClick={()=>handleDistanceChange(0.5)}>{t("global.dashboard.within")} 0.5 {t("global.dashboard.distancemetric")}</span>
+                      <span style={{ fontSize: `${16 * scaleFactor}px` }} onClick={()=>handleDistanceChange(1.0)}>{t("global.dashboard.within")} 1.0 {t("global.dashboard.distancemetric")}</span>
+                      <span style={{ fontSize: `${16 * scaleFactor}px` }} onClick={()=>handleDistanceChange(2.0)}>{t("global.dashboard.within")} 2.0 {t("global.dashboard.distancemetric")}</span>
+                      <span style={{ fontSize: `${16 * scaleFactor}px` }} onClick={()=>handleDistanceChange(5.0)}>{t("global.dashboard.within")} 5.0 {t("global.dashboard.distancemetric")}</span>
+                      <span style={{ fontSize: `${16 * scaleFactor}px` }} onClick={()=>handleDistanceChange(10.0)}>{t("global.dashboard.within")} 10.0 {t("global.dashboard.distancemetric")}</span>
+                      <span style={{ fontSize: `${16 * scaleFactor}px` }} onClick={()=>handleDistanceChange(15.0)}>{t("global.dashboard.within")} 15.0 {t("global.dashboard.distancemetric")}</span>
                 </div>
               </div>
             </div>
 
-            <div className={`displayLocations ${modifyDisplay}`}>
+            <div className={`displayLocations ${modifyDisplay}`} 
+                  style={
+                    !wideDisplay
+                      ? modifyDisplay !== ''
+                        ? { height: `${380 * scaleFactor}px`, paddingTop: `${400 * scaleFactor*.6}px` } // If wideDisplay is false and modifyDisplay is not empty
+                        : { height: `${440 * scaleFactor}px` } // If wideDisplay is false and modifyDisplay is empty
+                      : {} // Default empty style
+                  }>
               <ul>
                 {nearbyLocations.map((location, index) => (
                 <li key={`${location.address}-${index}`}
                   onMouseEnter={() => highlightMarker(index)} 
                   onClick={()=>handleListItemClick(index)}>
                   <div className="locationInfo">
-                    <span className="name-text">{location.name}</span>
-                    <span className="location-text">{location.address}</span>
+                    <span style={{ fontSize: `${20 * scaleFactor}px` }} className="name-text">{location.name}</span>
+                    <span style={{ fontSize: `${20 * scaleFactor}px` }} className="location-text">{location.address}</span>
                     <span> </span>
                     <div style={{ display: 'flex', alignItems: 'center', paddingTop: '15px' }}>
-                      <span className="routeDistance">{location.distance} mi / {(location.distance * 1.60934).toFixed(3)} km</span>
-                      <span style={{ marginRight: '-55px', justifyContent: 'none', borderRadius: '3px', padding: '4px', color: 'white', background: `${location.color}`, fontSize: '15px' }}>                  
+                      <span style={{ fontSize: `${15 * scaleFactor}px` }} className="routeDistance">{location.distance} mi / {(location.distance * 1.60934).toFixed(3)} km</span>
+                      <span style={{ marginRight: '-55px', justifyContent: 'none', borderRadius: '3px', padding: '4px', color: 'white', background: `${location.color}`, fontSize: `${15 * scaleFactor}px` }}>                  
                           {location.rating === 0 ? 
                             " No  ratings " :
                             `${(location.rating).toFixed(1)} / 5.0 ★`
@@ -689,14 +625,14 @@ function SearchLocation(){
       </div>
     );
   }
-
+  const { scaleFactor } = useTextSize();
   return (
     <div>
       <div className="lower-content">
         <SavedSales update={dataLoaded} />
           <div className="search-map">
             <div className="input-container">
-              <input
+              <input style={{ fontSize: `${20 * scaleFactor}px` }}
                 id="locationInput"
                 name="location"
                 type="text"
@@ -705,10 +641,11 @@ function SearchLocation(){
                 onChange={(e) => setLocation(e.target.value)}
                 aria-label="Search Location"
               />
-              <button id="searchButton" type="button" className="searchButton" onClick={handleSearch}>
+              <button style={{ fontSize: `${16 * scaleFactor}px` }} id="searchButton" type="button" className="searchButton" onClick={handleSearch}>
                 {t("global.dashboard.search")}
               </button>
               <img className="currentLocationButton" 
+                style={{ height: `${38 * scaleFactor}px` }}
                 onClick={()=>{setLocation('Your Location'); handleCurrentLocation();}}
                 src="/assets/currentLocation.png"
                 alt="current_location"
@@ -718,7 +655,7 @@ function SearchLocation(){
             {wideDisplay ? (
                 <div className="map" id="map"></div>
             ) : (
-                showMap && <div className="map" id="map"></div>
+                showMap && <div className="map" id="map" style={{ top: `${170 * scaleFactor}px` }}></div>
             )}
           </div>
       </div>
@@ -764,6 +701,10 @@ function UserProfile(){
       document.removeEventListener("mousedown", handler);
     }
   })
+  const { increaseTextSize, decreaseTextSize } = useTextSize();
+  const { scaleFactor } = useTextSize();
+  const textSizePercentage = Math.round(scaleFactor * 100);
+
 
 
   return (
@@ -778,14 +719,23 @@ function UserProfile(){
  
           {/* eslint-disable jsx-a11y/anchor-is-valid */}
           <div className={`dropdown-content ${dropdownOpen ? 'show' : ''}`}>
-            <button ref={settingsRef} type="button">
+            <div className="size-mod">
+              <button style={{ fontSize: `${30 * scaleFactor}px` }} className="btn-size" onClick={decreaseTextSize}>-</button>
+              <div className="size-info">
+                <p style={{ fontSize: `${12 * scaleFactor}px` }} className="size-label">{t("global.dropdown.textsize")}</p>
+                <p style={{ fontSize: `${18 * scaleFactor}px` }} className="size-display">{textSizePercentage}%</p>
+              </div>
+              <button style={{ fontSize: `${30 * scaleFactor}px` }} className="btn-size" onClick={increaseTextSize}>+</button>
+            </div>
+            {/* eslint-disable-next-line */}
+            <button style={{ fontSize: `${20 * scaleFactor}px` }} className="btn-size" onClick={increaseTextSize} className="lang-btn" ref={settingsRef} type="button">
             {t("global.dropdown.language")}       
             </button >
           </div>
           {/* eslint-disable jsx-a11y/anchor-is-valid */}
           <div className={`dropdown-content ${languagesOpen ? 'show' : ''}`}>
             <LanguageSelector />
-            <a ref={backRef}>{t("global.dropdown.return")}</a>
+            <a style={{ fontSize: `${18 * scaleFactor}px` }} ref={backRef}>{t("global.dropdown.return")}</a>
           </div>
 
           <div>
@@ -801,10 +751,11 @@ function Dashboard(){
   
   useEffect(() => {
     nearbyLocations = [];
-    //console.log("jorge", globalLocation);
-    
   }, []);
    const {t} = useTranslation();
+
+   const { scaleFactor } = useTextSize();
+
     return(
     <div className="dashboard">
       <div className="topbar">
@@ -816,7 +767,7 @@ function Dashboard(){
                 alt="logo"
               />
             </div>
-            <div className="name">{t("global.header.name")}</div>        
+            <div style={{fontSize: `${45 * scaleFactor}px`}} className="name">{t("global.header.name")}</div>        
           </div>
           {UserProfile()}
       </div>
