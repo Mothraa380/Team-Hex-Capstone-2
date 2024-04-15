@@ -549,13 +549,13 @@ function SearchLocation(){
 
     return (
       <div className="saved">
-        <div className="sidebar-container">
+        <div className="sidebar-container" style={!wideDisplay ? { top: `${18 * scaleFactor}px`, height: `calc(78vh * ${scaleFactor})` } : {}}>
           <div className={`sidebar ${modifyDisplay}`}>
             <div className="sidebar-top">
               <div style={{ fontSize: `${30 * scaleFactor}px` }} className="name">
               {t("global.dashboard.title")}
                 <div className="buttons">
-                  <button className="viewMapButton" style={{ marginRight: '0px'}} onClick={toggleMap}>
+                  <button className="viewMapButton" style={{ marginRight: '0px', fontSize: `${14 * scaleFactor}px`}} onClick={toggleMap}>
                   {showMap ? 'Close map' : 'View map'}
                 </button>
                 <button style={{ fontSize: `${14 * scaleFactor}px` }} className="add-button"><Link to="/add-restroom" style={{ textDecoration: 'none', color: 'inherit'}}>{t("global.dashboard.addPost")}</Link></button>
@@ -581,7 +581,14 @@ function SearchLocation(){
               </div>
             </div>
 
-            <div className={`displayLocations ${modifyDisplay}`}>
+            <div className={`displayLocations ${modifyDisplay}`} 
+                  style={
+                    !wideDisplay
+                      ? modifyDisplay !== ''
+                        ? { height: `${380 * scaleFactor}px`, paddingTop: `${400 * scaleFactor}px` } // If wideDisplay is false and modifyDisplay is not empty
+                        : { height: `${440 * scaleFactor}px` } // If wideDisplay is false and modifyDisplay is empty
+                      : {} // Default empty style
+                  }>
               <ul>
                 {nearbyLocations.map((location, index) => (
                 <li key={`${location.address}-${index}`}
@@ -638,6 +645,7 @@ function SearchLocation(){
                 {t("global.dashboard.search")}
               </button>
               <img className="currentLocationButton" 
+                style={{ height: `${38 * scaleFactor}px` }}
                 onClick={()=>{setLocation('Your Location'); handleCurrentLocation();}}
                 src="/assets/currentLocation.png"
                 alt="current_location"
@@ -647,7 +655,7 @@ function SearchLocation(){
             {wideDisplay ? (
                 <div className="map" id="map"></div>
             ) : (
-                showMap && <div className="map" id="map"></div>
+                showMap && <div className="map" id="map" style={{ top: `${170 * scaleFactor}px` }}></div>
             )}
           </div>
       </div>

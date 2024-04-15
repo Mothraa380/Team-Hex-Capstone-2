@@ -50,7 +50,7 @@ html, body{
     width:500px;
   }
   .dashboard .content .name {
-    font-size: 35px; 
+    font-size: 35px !important; 
     margin-right: 40px;
     text-align: center;
   }
@@ -342,10 +342,10 @@ html, body{
 .dashboard .lower-content .input-container .searchButton{
   padding: 10px;
   margin-top: 8px;
-  margin-bottom: -7px;
+  margin-bottom: 0px;
   margin-right: 20px;
   margin-left: -30px;
-  height: 42px;
+  height: auto;
   background: rgb(72, 72, 185);
   color: white;
   font-size: 17px;
@@ -580,7 +580,7 @@ ul {
     border-radius: 5px;
     position: sticky;
     top:0px;
-    margin-left: -3px;
+    margin-left: -4px;
     width: 100%;
     padding-left: 0;
     padding-right: 0;
