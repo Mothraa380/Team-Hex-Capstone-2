@@ -727,6 +727,7 @@ function UserProfile(){
               </div>
               <button style={{ fontSize: `${30 * scaleFactor}px` }} className="btn-size" onClick={increaseTextSize}>+</button>
             </div>
+            {/* eslint-disable-next-line */}
             <button style={{ fontSize: `${20 * scaleFactor}px` }} className="btn-size" onClick={increaseTextSize} className="lang-btn" ref={settingsRef} type="button">
             {t("global.dropdown.language")}       
             </button >
