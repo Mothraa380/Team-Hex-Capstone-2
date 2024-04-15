@@ -226,7 +226,9 @@ function SearchLocation(){
     });
     setDataLoaded(true);  //to initiate sidebar update
 
-    if(dataLoaded){}
+    if(dataLoaded){
+      console.log("data loaded");
+    }
     
     // Log the number of locations found
   
@@ -467,7 +469,8 @@ function SearchLocation(){
   useEffect(() => {
     const searchParams = new URLSearchParams(currentLocation.search);
     if (searchParams.get('useLocation') === 'true') {
-     handleCurrentLocation();
+      setLocation('Your Location');
+      handleCurrentLocation();
     }
    // Removed extraneous closing brace and corrected dependency array
    }, [currentLocation.search]);
