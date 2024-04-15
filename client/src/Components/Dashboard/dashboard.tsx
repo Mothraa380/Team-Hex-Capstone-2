@@ -585,7 +585,7 @@ function SearchLocation(){
                   style={
                     !wideDisplay
                       ? modifyDisplay !== ''
-                        ? { height: `${380 * scaleFactor}px`, paddingTop: `${400 * scaleFactor}px` } // If wideDisplay is false and modifyDisplay is not empty
+                        ? { height: `${380 * scaleFactor}px`, paddingTop: `${400 * scaleFactor*.6}px` } // If wideDisplay is false and modifyDisplay is not empty
                         : { height: `${440 * scaleFactor}px` } // If wideDisplay is false and modifyDisplay is empty
                       : {} // Default empty style
                   }>
