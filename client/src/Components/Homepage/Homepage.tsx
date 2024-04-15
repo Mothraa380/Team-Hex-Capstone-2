@@ -95,7 +95,6 @@ function Homepage() {
             <FontAwesomeIcon icon={faCrosshairs} />
           </button>
         </div>
-      </div>
       <button onClick={handleAddRestroom} className="add-restroom-button">
         {t("global.landing.addrestroom")}
       </button>
