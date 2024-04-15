@@ -66,6 +66,7 @@ function Homepage() {
         window.google.maps.event.clearInstanceListeners(autocomplete);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Empty dependency array means this effect will only run once when the component mounts
   
 
