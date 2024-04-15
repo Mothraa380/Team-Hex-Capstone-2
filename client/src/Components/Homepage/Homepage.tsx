@@ -6,12 +6,10 @@ import { faSearch, faCrosshairs } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next"; // Make sure i18next is initialized in your project
 import LanguageSelector from "../../Translations/language-selector"; // Adjust the path as needed
-import { useTextSize } from '../../TextSizeContext.js';
 
 function Homepage() {
   let navigate = useNavigate();
   const { t } = useTranslation();
-  //const { scaleFactor } = useTextSize();
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearch = () => {
