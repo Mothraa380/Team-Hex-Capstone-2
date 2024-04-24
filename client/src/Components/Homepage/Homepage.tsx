@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next"; // Make sure i18next is initialized in your project
 import LanguageSelector from "../../Translations/language-selector"; // Adjust the path as needed
 import { Loader } from '@googlemaps/js-api-loader';
-import { useTextSize } from '../../TextSizeContext.js';
 
 
 function Homepage() {
@@ -38,7 +37,7 @@ function Homepage() {
 
   useEffect(() => {
     const loader = new Loader({
-      apiKey: 'AIzaSyDLRmzWGSVuOYRHHFJ0vrEApxLuSVVgf1o',
+      apiKey: 'AIzaSyDaTix-YpKD6GHuumhE0s-XXkzOgKQpC5U',
       version: 'weekly',
       libraries: ['places', 'geometry'],
     });
