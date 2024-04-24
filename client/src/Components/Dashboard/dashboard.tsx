@@ -137,7 +137,7 @@ function SearchLocation(){
   
         // Perform geocoding to convert address to coordinates
         const response = await fetch(
-          `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=AIzaSyDLRmzWGSVuOYRHHFJ0vrEApxLuSVVgf1o`
+          `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=AIzaSyDaTix-YpKD6GHuumhE0s-XXkzOgKQpC5U`
         );
   
         if (response.ok) {
@@ -241,7 +241,7 @@ function SearchLocation(){
   useEffect(() => { 
     //load map
     const loader = new Loader({
-      apiKey: 'AIzaSyDLRmzWGSVuOYRHHFJ0vrEApxLuSVVgf1o',
+      apiKey: 'AIzaSyDaTix-YpKD6GHuumhE0s-XXkzOgKQpC5U',
       version: 'weekly',
       libraries: ['places', 'geometry'],
     });
@@ -413,13 +413,13 @@ function SearchLocation(){
         if(globalLocation !== '')
         {
           response = await fetch(
-            `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(globalLocation)}&key=AIzaSyDLRmzWGSVuOYRHHFJ0vrEApxLuSVVgf1o`
+            `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(globalLocation)}&key=AIzaSyDaTix-YpKD6GHuumhE0s-XXkzOgKQpC5U`
           );
         }
         else
         {
           response = await fetch(
-            `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(location)}&key=AIzaSyDLRmzWGSVuOYRHHFJ0vrEApxLuSVVgf1o`
+            `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(location)}&key=AIzaSyDaTix-YpKD6GHuumhE0s-XXkzOgKQpC5U`
           );
         }
         
@@ -549,8 +549,13 @@ function SearchLocation(){
 
     return (
       <div className="saved">
-        <div className="sidebar-container" style={!wideDisplay ? { top: `${18 * scaleFactor}px`, height: `calc(78vh * ${scaleFactor})` } : {}}>
-          <div className={`sidebar ${modifyDisplay}`}>
+        <div className="sidebar-container" style={!wideDisplay ? { top: `${18 * scaleFactor}px`, height: `calc(78vh * ${scaleFactor})` } : { height: `calc(78vh * ${scaleFactor}) `, maxHeight:'670px' }}>
+          <div className={`sidebar ${modifyDisplay}`} 
+               style={
+                modifyDisplay !== ''
+                    ? { height: `calc(160% - ${(200 * (scaleFactor - 1))}px` } // modifyDisplay is not empty
+                    : { height: `calc(100vh - ${100 - (50 * (scaleFactor - 1))}px` } //modifyDisplay is empty
+                }>
             <div className="sidebar-top">
               <div style={{ fontSize: `${30 * scaleFactor}px` }} className="name">
               {t("global.dashboard.title")}
@@ -585,9 +590,9 @@ function SearchLocation(){
                   style={
                     !wideDisplay
                       ? modifyDisplay !== ''
-                        ? { height: `${380 * scaleFactor}px`, paddingTop: `${400 * scaleFactor*.6}px` } // If wideDisplay is false and modifyDisplay is not empty
+                        ? { height: `${380 * scaleFactor}px`, paddingTop: `${400 + (50 * (scaleFactor-1))}px` } // If wideDisplay is false and modifyDisplay is not empty
                         : { height: `${440 * scaleFactor}px` } // If wideDisplay is false and modifyDisplay is empty
-                      : {} // Default empty style
+                       : { height: `${440 - 240 * (scaleFactor - 1)}px`, minHeight: `${500 - 30 * (scaleFactor - 1)}px` } // Default empty style
                   }>
               <ul>
                 {nearbyLocations.map((location, index) => (
@@ -653,9 +658,9 @@ function SearchLocation(){
             </div>
             
             {wideDisplay ? (
-                <div className="map" id="map"></div>
+                <div className="map" id="map" style={{ minHeight: `${500}px`}}></div>
             ) : (
-                showMap && <div className="map" id="map" style={{ top: `${170 * scaleFactor}px` }}></div>
+                showMap && <div className="map" id="map" style={{ top: `${190  + (100 * (scaleFactor-1))}px` }}></div>
             )}
           </div>
       </div>
@@ -767,7 +772,7 @@ function Dashboard(){
                 alt="logo"
               />
             </div>
-            <div style={{fontSize: `${45 * scaleFactor}px`}} className="name">{t("global.header.name")}</div>        
+            <div style={{fontSize: `${44 * scaleFactor}px`}} className="name">{t("global.header.name")}</div>        
           </div>
           {UserProfile()}
       </div>

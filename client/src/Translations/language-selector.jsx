@@ -1,5 +1,4 @@
 import { useTranslation } from 'react-i18next';
-import React, { useEffect } from "react";
 import { useTextSize } from '../TextSizeContext';
 
 const languages = [

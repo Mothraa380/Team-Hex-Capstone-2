@@ -195,7 +195,7 @@ function ReviewPage() {
   useEffect(() => {
     //load map into page
     const loader = new Loader({
-      apiKey: 'AIzaSyDLRmzWGSVuOYRHHFJ0vrEApxLuSVVgf1o',
+      apiKey: 'AIzaSyDaTix-YpKD6GHuumhE0s-XXkzOgKQpC5U',
       version: 'weekly',
       libraries: ['places', 'geometry'], // You can add "directions" here for routes
     });
@@ -239,7 +239,7 @@ function ReviewPage() {
   
       // Perform geocoding to convert address to coordinates
       const response = await fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=AIzaSyDLRmzWGSVuOYRHHFJ0vrEApxLuSVVgf1o`
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=AIzaSyDaTix-YpKD6GHuumhE0s-XXkzOgKQpC5U`
       );
   
       if (response.ok) {
