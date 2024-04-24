@@ -7,7 +7,6 @@ import { useTranslation } from "react-i18next"; // Make sure i18next is initiali
 import LanguageSelector from "../../Translations/language-selector"; // Adjust the path as needed
 import { Loader } from '@googlemaps/js-api-loader';
 
-
 function Homepage() {
   const navigate = useNavigate();
   const searchInputRef = useRef(null);
@@ -67,6 +66,7 @@ function Homepage() {
         window.google.maps.event.clearInstanceListeners(autocomplete);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Empty dependency array means this effect will only run once when the component mounts
   
 
