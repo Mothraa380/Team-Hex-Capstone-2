@@ -11,12 +11,13 @@ USE npm start TO RUN BOTH SERVER AND CLIENT SIDE
 
 ## Technologies Used
 
-* JavaScript
+* TypeScript
 * React
 * HTML
 * CSS
-* MongoDB
-* Typescript
+* Firebase
+* Google API
+* I18next API
 
 
 ## Getting Started
@@ -27,3 +28,5 @@ USE npm start TO RUN BOTH SERVER AND CLIENT SIDE
 ## Next Steps
 
 Future developments
+* Adding images to reviews
+* Adding images to the restroom information page
